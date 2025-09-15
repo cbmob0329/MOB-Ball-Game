@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+<title>MOB 3on3 Dodgeball – Square 512</title>
+<style>
+  :root{
+    --ui:#0d0f12; --fg:#fff; --dim:#aab; --card:#1b1f27; --card2:#2b303b;
+  }
+  html,body{margin:0;height:100%;background:#000;color:#fff;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Hiragino Sans","Yu Gothic",sans-serif}
+  #wrap{position:fixed;inset:0;display:flex;flex-direction:column;background:#000}
+  #hudTop{flex:0 0 auto;display:flex;gap:8px;align-items:center;padding:8px 10px;background:var(--ui);font-size:14px}
+  .pill{background:#161a22;padding:6px 10px;border-radius:999px}
+  #stage{flex:1 1 auto;display:flex;justify-content:center;align-items:center;background:#000}
+  #cv{width:min(100vmin,100vw);height:min(100vmin,calc(100vh - 220px)); /* 512x512 内部、外側は正方形にスケーリング */
+       display:block;image-rendering:pixelated;touch-action:none;background:#000}
+  #hudBtm{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;padding:10px;background:var(--ui);gap:8px}
+  .pad{position:relative;width:220px;height:140px}
+  .pad .btn{position:absolute;width:68px;height:68px;border-radius:50%;background:var(--card);box-shadow:inset 0 0 0 2px var(--card2);display:flex;align-items:center;justify-content:center}
+  .btn.up{top:4px;left:76px} .btn.down{bottom:4px;left:76px} .btn.left{left:4px;top:36px} .btn.right{right:4px;top:36px}
+  .btn:active{transform:translateY(1px)}
+  .actions{display:flex;gap:10px}
+  .ab{width:96px;height:96px;border-radius:14px;background:var(--card);box-shadow:inset 0 0 0 2px var(--card2);display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .ab small{opacity:.7}
+  #toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 10px);background:#000a;padding:8px 12px;border-radius:10px;font-size:12px;pointer-events:none;opacity:0;transition:opacity .2s}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="hudTop">
+    <div class="pill">MOB 3on3 サンプル（512）</div>
+    <div class="pill">時間: <span id="time">120</span>s</div>
+    <div class="pill">必殺: <span id="sp">2</span></div>
+    <div class="pill" id="hint">敵をタップ→投げる→ゲージ / 右側でCATCH</div>
+  </div>
+
+  <div id="stage"><canvas id="cv" width="512" height="512"></canvas></div>
+
+  <div id="hudBtm">
+    <div class="pad" id="pad">
+      <div class="btn up" data-dir="up">▲</div>
+      <div class="btn down" data-dir="down">▼</div>
+      <div class="btn left" data-dir="left">◀</div>
+      <div class="btn right" data-dir="right">▶</div>
+    </div>
+    <div class="actions">
+      <div class="ab" id="btnThrow"><div>投げる</div><small>選択後</small></div>
+      <div class="ab" id="btnCatch"><div>CATCH</div><small>近距離時</small></div>
+    </div>
+  </div>
+</div>
+<div id="toast"></div>
+
+<script>
+(() => {
+  // ===== Canvas & Context =====
+  const cv = document.getElementById('cv');
+  const ctx = cv.getContext('2d');
+  ctx.imageSmoothingEnabled = false;
+
+  // ===== HUD refs =====
+  const timeEl = document.getElementById('time');
+  const spEl   = document.getElementById('sp');
+  const toast  = document.getElementById('toast');
+
+  // ===== Load images =====
+  const imgBG = new Image(); imgBG.src = 'DMH.png';
+  const imgBall = new Image(); imgBall.src = 'ball.png';
+  const imgChar = new Image(); imgChar.src = 'DMY.png';
+
+  // ===== Game constants =====
+  const SIZE = 512; // internal
+  const court = { x:0, y:0, w:512, h:512 };
+  const centerX = 256;
+  const groundTop = 80, groundBottom = 480; // 可動域（上下）
+  const leftBound  = 32, rightBound = 480;
+
+  const coeff = {
+    techSpeed: 7.5,
+    powerSpeed: 12.0,
+    specialSpeed: 14.0,
+    techCost: 12,
+    powerCost: 24,
+    catchWindowMs: 70,
+    recoverPerSec: 3,
+    knockTech:[8,14],
+    knockPower:[18,26],
+    knockSpcl:[28,40],
+    gaugeTime: 700, // ms 片道
+  };
+
+  // ===== Utility =====
+  const rand=(a,b)=>a+Math.random()*(b-a);
+  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+  const now = ()=>performance.now();
+
+  // ===== Entities =====
+  class Player {
+    constructor(side, x, y, isHuman=false){
+      this.side=side; this.x=x; this.y=y; this.w=32; this.h=32;
+      this.vx=0; this.vy=0; this.isHuman=isHuman;
+      // ステ（スピード速め）
+      this.stats = { Power:62, Tech:58, Speed:78, Stamina:70, Catch:55, HP:112, Focus:55, Stability:50 };
+      this.speed = 2.0 + this.stats.Speed*0.0125; // だいぶ速め
+      this.maxHP = this.stats.HP; this.hp=this.maxHP;
+      this.staminaMax = 100 + this.stats.Stamina*0.5;
+      this.stamina = this.staminaMax; this.staRegen = coeff.recoverPerSec + this.stats.Stamina*0.03;
+      this.catchBonusMs = coeff.catchWindowMs + this.stats.Catch*0.3 + this.stats.Focus*0.2;
+      this.dead=false; this.fade=1; this.hurtTimer=0; this.cooldown=0;
+      this.target=null; this.state='idle'; this.pickHint=0;
+      this.specialLeft=2; this.aiNext=now()+rand(250,600);
+    }
+    rect(){ return {x:this.x-16,y:this.y-28,w:this.w,h:this.h}; }
+  }
+
+  class Ball {
+    constructor(){
+      this.x=centerX; this.y=(groundTop+groundBottom)/2;
+      this.vx=0; this.vy=0; this.owner=null;
+      this.state='free'; // free / air / owned
+      this.lastThrowTime=0;
+    }
+  }
+
+  // ===== Teams（同一キャラ、敵は反転描画） =====
+  const leftTeam = [
+    new Player('L', leftBound+80, 160, true),
+    new Player('L', leftBound+64, 240, false),
+    new Player('L', leftBound+96, 320, false),
+  ];
+  const rightTeam = [
+    new Player('R', rightBound-80, 160, false),
+    new Player('R', rightBound-64, 240, false),
+    new Player('R', rightBound-96, 320, false),
+  ];
+  const allPlayers = [...leftTeam, ...rightTeam];
+  const human = leftTeam[0];
+
+  const ball = new Ball();
+
+  // ===== State =====
+  let last = now(), dt=0, timeLeft=120000, paused=false;
+  let menu = null; // {x,y, who, target}
+  let gauge = null; // {t0, who, target, choice, done, tapTime}
+  let catchHint = null; // {who, until}
+  let selectedEnemy = null;
+  let extendTime = 30000;
+
+  // ===== Input (D-Pad) =====
+  const pad = document.getElementById('pad');
+  const dirs = {up:false,down:false,left:false,right:false};
+  function setDir(d,on){ dirs[d]=on; }
+  pad.addEventListener('touchstart', e=>{ const el=e.target.closest('.btn'); if(el) setDir(el.dataset.dir,true); }, {passive:true});
+  pad.addEventListener('touchend',   e=>{ for(const k in dirs) dirs[k]=false; }, {passive:true});
+  pad.addEventListener('mousedown', e=>{ const el=e.target.closest('.btn'); if(el) setDir(el.dataset.dir,true); });
+  pad.addEventListener('mouseup',   e=>{ for(const k in dirs) dirs[k]=false; });
+
+  // 投げる／CATCH ボタン
+  document.getElementById('btnThrow').onclick=()=>{
+    if(selectedEnemy && !selectedEnemy.dead){
+      openMenuFor(human, selectedEnemy);
+    } else {
+      toastMsg('先に敵をタップで選択');
+    }
+  };
+  document.getElementById('btnCatch').onclick=()=>{ manualCatch(human); };
+
+  // Canvas taps（選択→メニュー／ゲージ停止）
+  cv.addEventListener('pointerdown', (e)=>{
+    const r=cv.getBoundingClientRect();
+    const x=(e.clientX-r.left)/ (r.width/cv.width);
+    const y=(e.clientY-r.top) / (r.height/cv.height);
+
+    // ゲージ中なら停止
+    if(gauge && !gauge.done){ gauge.tapTime=now(); gauge.done=true; return; }
+
+    // 2段階：まず敵を選択（当たりを広めに）
+    const hit = pickEnemyAt(x,y, rightTeam);
+    if(hit){
+      selectedEnemy = hit;
+      human.target = hit;
+      human.pickHint = 600; // ms
+      toastMsg('選択済み：右下「投げる」でもOK');
+      // 同じ敵をもう一度タップでメニュー
+      if(menu && menu.target===hit){ /* 既に開いてたら何もしない */ }
+      else { openMenuFor(human, hit); }
+      return;
+    }
+
+    // メニュー内の選択（画面タップ位置で判定）
+    if(menu){
+      const choice = angleToChoice(Math.atan2(y-menu.y, x-menu.x));
+      if(choice==='sp' && human.specialLeft<=0){ toastMsg('必殺なし'); return; }
+      startGauge(human, menu.target, choice);
+      menu=null; return;
+    }
+
+    // 何も当たらなければ選択解除
+    selectedEnemy = null; human.target=null; menu=null;
+  });
+
+  // ===== Helpers =====
+  function toastMsg(s){ toast.textContent=s; toast.style.opacity=1; clearTimeout(toast._t); toast._t=setTimeout(()=>toast.style.opacity=0,1200); }
+  function pickEnemyAt(x,y, list){
+    let best=null, bd=1e9;
+    for(const p of list){
+      if(p.dead) continue;
+      const r=p.rect();
+      // 当たり範囲を少し拡張
+      const ex=6, ey=6;
+      if(x>=r.x-ex && x<=r.x+r.w+ex && y>=r.y-ey && y<=r.y+r.h+ey){
+        const d=Math.hypot(p.x-x,p.y-y);
+        if(d<bd){bd=d; best=p;}
+      }
+    }
+    return best;
+  }
+  function openMenuFor(who, target){
+    if(!target||target.dead) return;
+    menu = {x: clamp(target.x, 72, court.w-72), y: target.y-48, who, target};
+  }
+  function angleToChoice(a){
+    // 右=必殺、上=テク、下=パワ
+    const deg=a*180/Math.PI;
+    if(deg>-60 && deg<60) return 'sp';
+    if(deg>=60) return 'tech';
+    return 'power';
+  }
+
+  // ===== Gauge / Throw =====
+  function startGauge(who, target, choice){
+    if(choice==='sp' && who.specialLeft<=0) choice='power';
+    if(choice==='power' && who.stamina<coeff.powerCost*0.8) choice='tech';
+    gauge = {t0:now(), who, target, choice, done:false, tapTime:0};
+  }
+  function finishGauge(g){
+    const elapsed = clamp( (g.tapTime - g.t0) / coeff.gaugeTime, 0, 1);
+    doThrow(g.who, g.target, g.choice, elapsed);
+    gauge=null;
+  }
+  function doThrow(who, target, choice, perf){
+    // コスト・残数
+    if(choice==='power'){ who.stamina -= coeff.powerCost * (1.0 - perf*0.3); }
+    else if(choice==='tech'){ who.stamina -= coeff.techCost * (1.0 - perf*0.5); }
+    else { who.specialLeft = Math.max(0, who.specialLeft-1); }
+    who.stamina = clamp(who.stamina, 0, who.staminaMax);
+    spEl.textContent = human.specialLeft;
+
+    // 速度
+    const speed =
+      choice==='power' ? (9.0 + perf*(coeff.powerSpeed-9.0)) :
+      choice==='tech'  ? (6.0 + perf*(coeff.techSpeed-6.0)) :
+                         (11.0+ perf*(coeff.specialSpeed-11.0));
+
+    // 方向
+    const dx=target.x - who.x, dy=target.y - who.y;
+    const ang=Math.atan2(dy,dx);
+    ball.x=who.x + Math.cos(ang)*18;
+    ball.y=who.y + Math.sin(ang)*12;
+    ball.vx=Math.cos(ang)*speed;
+    ball.vy=Math.sin(ang)*(speed*0.6);
+    ball.owner=who; ball.state='air'; ball.lastThrowTime=now();
+    who.cooldown=220;
+  }
+
+  // ===== Catch =====
+  function showCatchUI(p){
+    catchHint = {who:p, until: now()+450}; // 0.45s可視
+  }
+  function manualCatch(p){
+    if(!canAttemptCatch(p, ball)) return;
+    tryCatch(p);
+  }
+  function canAttemptCatch(p, ball){
+    if(p.dead) return false;
+    // 相手から飛来中かつ近距離
+    if(ball.state!=='air') return false;
+    if(!ball.owner) return false;
+    if(ball.owner===p) return false;
+    const towardLeft = ball.vx<0;
+    if(p.side==='L' && !towardLeft) return false;
+    if(p.side==='R' && towardLeft) return false;
+    const d=Math.hypot(p.x-ball.x, p.y-ball.y);
+    return d<64;
+  }
+  function tryCatch(p){
+    // タイミング判定（ボール投擲からの経過でゆるく）
+    const center = 420; // ms
+    const elapsed = now()-ball.lastThrowTime;
+    const diff = Math.abs(elapsed-center);
+    const ok = diff < p.catchBonusMs;
+    if(ok){
+      p.stamina = clamp(p.stamina + 12, 0, p.staminaMax);
+      ball.owner=p; ball.state='owned'; ball.vx=ball.vy=0;
+      toastMsg('キャッチ！');
+    } else {
+      // 失敗演出だけ
+      p.hurtTimer = 120;
+    }
+  }
+
+  // ===== Damage / Knockback =====
+  function onHit(def, choice, atk){
+    let dmg =
+      choice==='power'? rand(26,34):
+      choice==='tech' ? rand(18,24): rand(40,55);
+    dmg *= (1 + (atk.stats.Power||60)*0.004);
+    let kb =
+      choice==='power'? rand(...coeff.knockPower):
+      choice==='tech' ? rand(...coeff.knockTech): rand(...coeff.knockSpcl);
+    kb *= (1 - (def.stats.Stability||50)*0.008);
+    kb = clamp(kb, 4, 42);
+    def.hp -= Math.round(dmg);
+    def.hurtTimer=140;
+    def.vx += (atk.x<def.x? 1:-1) * kb*0.09;
+    def.vy += rand(-0.4,0.4);
+    if(def.hp<=0){ def.hp=0; def.dead=true; def.fade=1; def.state='down'; }
+  }
+
+  // ===== CPU =====
+  function cpuThink(p){
+    if(p.dead) return;
+    // 所有してたら攻撃
+    if(ball.owner===p && p.cooldown<=0){
+      const enemies = (p.side==='L'? rightTeam : leftTeam).filter(q=>!q.dead);
+      if(!enemies.length) return;
+      enemies.sort((a,b)=>Math.hypot(p.x-a.x,p.y-a.y)-Math.hypot(p.x-b.x,p.y-b.y));
+      const t=enemies[0];
+      let choice='tech';
+      if(p.stamina>20 && Math.random()<0.6) choice='power';
+      if(p.specialLeft>0 && Math.random()<0.2) choice='sp';
+      startGauge(p,t,choice);
+      gauge.tapTime = gauge.t0 + coeff.gaugeTime*0.8; // AIはそこそこ良いタイミング
+      gauge.done=true; return;
+    }
+    // それ以外：ボールへ/ポジション取り
+    if(ball.state==='air' || (ball.state==='free')){
+      const tx = clamp(ball.x + (p.side==='L'? -6:6), (p.side==='L'? leftBound : centerX+16), (p.side==='L'? centerX-16 : rightBound));
+      const ty = clamp(ball.y, groundTop+20, groundBottom-8);
+      moveTo(p, tx, ty, 0.7);
+    }else{
+      // 味方保持時は広がる
+      const baseY = (p.side==='L'? 160:160) + (Math.random()*160-80);
+      moveTo(p, clamp(p.x, (p.side==='L'? leftBound+16 : centerX+16), (p.side==='L'? centerX-16 : rightBound-16)), clamp(baseY, groundTop+24, groundBottom-24), 0.4);
+    }
+
+    // 近距離なら自動キャッチ試行
+    if(canAttemptCatch(p, ball)){
+      if(Math.random()<0.08) tryCatch(p);
+      showCatchUI(p);
+    }
+  }
+  function moveTo(p, tx, ty, ratio){
+    const dx=tx-p.x, dy=ty-p.y, len=Math.hypot(dx,dy)||1;
+    const sp=p.speed*ratio; p.x += (dx/len)*sp; p.y += (dy/len)*sp;
+    clampInSide(p);
+  }
+
+  // ===== Bounds（陣地制限） =====
+  function clampInSide(p){
+    // 自陣のみ
+    if(p.side==='L'){
+      p.x = clamp(p.x, leftBound+16, centerX-16);
+    }else{
+      p.x = clamp(p.x, centerX+16, rightBound-16);
+    }
+    p.y = clamp(p.y, groundTop+16, groundBottom-8);
+  }
+
+  // ===== Game loop =====
+  function step(ms){
+    if(paused) return;
+    timeLeft -= ms;
+    if(timeLeft<=0){
+      const La = leftTeam.filter(p=>!p.dead).length;
+      const Ra = rightTeam.filter(p=>!p.dead).length;
+      if(La===Ra && extendTime>0){ timeLeft+=extendTime; extendTime=0; }
+      else { endMatch(La>Ra?'勝ち':(La<Ra?'負け':'引き分け')); return; }
+    }
+    timeEl.textContent = Math.ceil(timeLeft/1000);
+
+    // Human move
+    if(!human.dead){
+      let mx=0,my=0; if(dirs.left)mx-=1; if(dirs.right)mx+=1; if(dirs.up)my-=1; if(dirs.down)my+=1;
+      const len=Math.hypot(mx,my)||1; human.x += (mx/len)*human.speed; human.y += (my/len)*human.speed;
+      clampInSide(human);
+    }
+
+    // regen / timers
+    for(const p of allPlayers){
+      if(p.dead){ p.fade=Math.max(0,p.fade-ms*0.002); continue; }
+      p.stamina = clamp(p.stamina + p.staRegen*(ms/1000), 0, p.staminaMax);
+      if(p.hurtTimer>0) p.hurtTimer-=ms;
+      if(p.cooldown>0) p.cooldown-=ms;
+    }
+
+    // Gauge
+    if(gauge && gauge.done){ finishGauge(gauge); }
+
+    // CPU think
+    const tnow=now();
+    for(const p of allPlayers){
+      if(p.isHuman) continue;
+      if(p.dead) continue;
+      if(p.aiNext<=tnow){ cpuThink(p); p.aiNext=tnow+rand(220,420); }
+    }
+
+    // Ball
+    if(ball.state==='air'){
+      ball.x += ball.vx; ball.y += ball.vy; ball.vy*=0.995;
+      // 壁反射少し
+      if(ball.y<groundTop){ ball.y=groundTop; ball.vy*=-0.6; }
+      if(ball.y>groundBottom){ ball.y=groundBottom; ball.vy*=-0.6; }
+      if(ball.x<leftBound){ ball.x=leftBound; ball.vx*=-0.6; }
+      if(ball.x>rightBound){ ball.x=rightBound; ball.vx*=-0.6; }
+
+      // キャッチ可視化（近づいたら）
+      if(canAttemptCatch(human, ball)) showCatchUI(human);
+
+      // ヒット判定
+      const enemies = (ball.owner && ball.owner.side==='L')? rightTeam : leftTeam;
+      let victim=null;
+      for(const e of enemies){
+        if(e.dead) continue;
+        const r=e.rect();
+        if(ball.x>=r.x && ball.x<=r.x+r.w && ball.y>=r.y && ball.y<=r.y+r.h){
+          victim=e; break;
+        }
+      }
+      if(victim){
+        onHit(victim, /*choice proxy*/ 'power', ball.owner||victim);
+        ball.state='free'; ball.owner=null; ball.vx=ball.vy=0;
+      }
+    }else if(ball.state==='free'){
+      ball.vx*=0.98; ball.vy*=0.98; ball.x+=ball.vx; ball.y+=ball.vy;
+      // 0.15s後に最寄りが取得
+      if(now()-ball.lastThrowTime>150){
+        let best=null, bd=1e9;
+        for(const p of allPlayers){ if(p.dead) continue; const d=Math.hypot(p.x-ball.x,p.y-ball.y); if(d<bd){bd=d; best=p;} }
+        if(best && bd<20){ ball.owner=best; ball.state='owned'; ball.vx=ball.vy=0; }
+      }
+    }else if(ball.state==='owned'){
+      if(ball.owner && !ball.owner.dead){
+        const sgn=(ball.owner.side==='L')?1:-1;
+        ball.x = ball.owner.x + 10*sgn;
+        ball.y = ball.owner.y - 6;
+      }else{
+        ball.state='free'; ball.owner=null;
+      }
+    }
+
+    // 決着
+    const La = leftTeam.filter(p=>!p.dead).length;
+    const Ra = rightTeam.filter(p=>!p.dead).length;
+    if(La===0 || Ra===0){ endMatch(La>0?'勝ち':'負け'); }
+  }
+
+  function endMatch(result){
+    paused=true;
+    setTimeout(()=>alert(`試合終了：${result}\n（リロードで再戦）`),10);
+  }
+
+  // ===== Render =====
+  function draw(){
+    // 背景（DMH.png を全面にフィット）
+    if(imgBG.complete && imgBG.naturalWidth>0){
+      ctx.drawImage(imgBG, 0,0, cv.width, cv.height);
+    }else{
+      ctx.fillStyle='#063'; ctx.fillRect(0,0,cv.width,cv.height);
+    }
+
+    // コート枠＆センターライン（見やすさ用）
+    ctx.fillStyle="#ffffff55";
+    ctx.fillRect(centerX-1, groundTop, 2, groundBottom-groundTop);
+
+    // プレイヤー（y昇順でZ）
+    const list = allPlayers.slice().sort((a,b)=>a.y-b.y);
+    for(const p of list){
+      const r=p.rect();
+      // HPバー
+      if(!p.dead){
+        const w=28,h=4, hpw=Math.round(w*(p.hp/p.maxHP));
+        ctx.fillStyle="#0008"; ctx.fillRect(p.x-w/2, r.y-7, w, h);
+        ctx.fillStyle="#0f0"; ctx.fillRect(p.x-w/2, r.y-7, Math.max(0,hpw), h);
+      }
+      // 本体
+      ctx.save();
+      if(p.hurtTimer>0){ ctx.globalAlpha=0.6+0.4*Math.sin((p.hurtTimer/140)*24); }
+      const flip = (p.side==='R')? -1:1;
+      if(imgChar.complete && imgChar.naturalWidth>0){
+        ctx.translate(p.x, r.y);
+        ctx.scale(flip,1);
+        ctx.drawImage(imgChar, flip===1? -16 : -16, 0, 32,32);
+      }else{
+        // ロード前はプレースホルダ
+        ctx.fillStyle = (p.side==='L')? '#ffd60a' : '#ffd60a';
+        ctx.fillRect(r.x, r.y, 32,32);
+        ctx.strokeStyle="#000"; ctx.strokeRect(r.x+0.5, r.y+0.5, 31,31);
+      }
+      ctx.restore();
+
+      // 選択表示
+      if(p===selectedEnemy){
+        ctx.strokeStyle="#fff"; ctx.strokeRect(r.x-2, r.y-2, r.w+4, r.h+4);
+        if(human.pickHint>0){
+          ctx.fillStyle="#fff"; ctx.font="10px monospace"; ctx.textAlign="center";
+          ctx.fillText("タップ", p.x, r.y-10);
+        }
+      }
+    }
+
+    // ボール
+    if(ball.state!=='owned'){
+      if(imgBall.complete && imgBall.naturalWidth>0){
+        ctx.drawImage(imgBall, Math.round(ball.x-8), Math.round(ball.y-8), 16,16);
+      }else{
+        ctx.fillStyle="#f90"; ctx.fillRect(ball.x-4, ball.y-4, 8,8);
+      }
+    }else if(ball.owner){
+      if(imgBall.complete && imgBall.naturalWidth>0){
+        ctx.drawImage(imgBall, Math.round(ball.x-8), Math.round(ball.y-8), 16,16);
+      }else{
+        ctx.fillStyle="#f90"; ctx.fillRect(ball.x-4, ball.y-4, 8,8);
+      }
+    }
+
+    // ラジアルメニュー
+    if(menu){ drawRadial(menu.x, menu.y, human.specialLeft>0); }
+
+    // ゲージ
+    if(gauge){ drawGauge(gauge); }
+
+    // CATCHヒント
+    if(catchHint && now()<catchHint.until){
+      const p=catchHint.who;
+      ctx.fillStyle="#000a"; ctx.fillRect(p.x-36, p.y-56, 72, 14);
+      ctx.fillStyle="#fff"; ctx.font="10px monospace"; ctx.textAlign="center";
+      ctx.fillText("CATCH!", p.x, p.y-45);
+    }
+  }
+
+  function drawRadial(cx,cy, hasSP){
+    ctx.save();
+    // ring
+    ctx.beginPath(); ctx.arc(cx,cy, 56, 0, Math.PI*2); ctx.fillStyle="rgba(16,20,28,.92)"; ctx.fill();
+    // sectors
+    drawSector(cx,cy, -Math.PI/3, Math.PI/3, hasSP?"#fff":"#777", "必殺");
+    drawSector(cx,cy,  Math.PI/3, Math.PI-0.02, "#9cf", "テク");
+    drawSector(cx,cy, -Math.PI+0.02, -Math.PI/3, "#fc9", "パワ");
+    ctx.restore();
+  }
+  function drawSector(cx,cy,a0,a1,col,label){
+    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy, 52, a0,a1); ctx.closePath();
+    ctx.fillStyle=col+"cc"; ctx.fill();
+    const a=(a0+a1)/2; const rx=cx+Math.cos(a)*34, ry=cy+Math.sin(a)*34+4;
+    ctx.fillStyle="#000"; ctx.font="12px monospace"; ctx.textAlign="center"; ctx.fillText(label, rx, ry);
+  }
+
+  function drawGauge(g){
+    const w=160,h=12; const x=clamp(g.who.x-w/2, 24, court.w-w-24), y=g.who.y-46;
+    ctx.fillStyle="#000a"; ctx.fillRect(x-2,y-2,w+4,h+4);
+    ctx.fillStyle="#222"; ctx.fillRect(x,y,w,h);
+    // zones
+    ctx.fillStyle="#0f0"; ctx.fillRect(x+2,y+2, Math.floor(w*0.5)-2, h-4);
+    ctx.fillStyle="#ff0"; ctx.fillRect(x+Math.floor(w*0.5),y+2, Math.floor(w*0.3), h-4);
+    ctx.fillStyle="#f30"; ctx.fillRect(x+Math.floor(w*0.8),y+2, Math.floor(w*0.2)-2, h-4);
+    // cursor
+    const t = clamp((now()-g.t0)/coeff.gaugeTime, 0, 1);
+    const cur = Math.floor((w-6)*t);
+    ctx.fillStyle="#fff"; ctx.fillRect(x+3+cur, y+1, 4, h-2);
+    // label
+    ctx.fillStyle="#fff"; ctx.font="10px monospace"; ctx.textAlign="center";
+    const lab = g.choice==='power'?'パワー':(g.choice==='tech'?'テク':'必殺'); ctx.fillText(lab, x+w/2, y-6);
+  }
+
+  // ===== Main loop =====
+  function loop(){
+    const t=now(); dt=t-last; last=t;
+    step(dt);
+    draw();
+    if(human.pickHint>0) human.pickHint-=dt;
+    requestAnimationFrame(loop);
+  }
+  loop();
+
+  // ===== Victory check helper (unused separate) =====
+
+})();
+</script>
+</body>
+</html>
