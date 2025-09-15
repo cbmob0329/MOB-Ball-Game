@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport"
       content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
-<title>MOB 3on3 Dodgeball – Square 512 (anchors, pickup, iOS safe)</title>
+<title>MOB 3on3 Dodgeball – Square 512 (miss pickup & no-auto-repeat)</title>
 <style>
   :root{ --ui:#0d0f12; --card:#1b1f27; --card2:#2b303b; }
   html,body{ margin:0; height:100%; background:#000; color:#fff;
@@ -82,7 +82,7 @@
   // ===== HUD refs =====
   const timeEl = document.getElementById('time');
   const spEl   = document.getElementById('sp');
-  const toastEl  = document.getElementById('toast'); // rename
+  const toastEl  = document.getElementById('toast');
 
   // ===== DOM menu =====
   const headMenu = document.getElementById('headMenu');
@@ -97,13 +97,13 @@
 
   // ===== Consts =====
   const W=512,H=512, CX=256, TOP=80, BOT=480, LB=32, RB=480;
-  const ANCHOR_UPDATE_MS = 300;    // アンカー再計算
-  const ASSIGN_UPDATE_MS = 400;    // アンカー割当
-  const SEPARATION_MIN_D = 32;     // 密集回避距離
-  const SEPARATION_FORCE = 0.08;   // 速度補正量
-  const PICKUP_RADIUS    = 36;     // 転がり回収半径
-  const PICKUP_DELAY_MS  = 30;     // 転がり回収遅延
-  const AI_THROW_TIMEOUT = 1200;   // CPU投球最長待ち（ms）
+  const ANCHOR_UPDATE_MS = 300;
+  const ASSIGN_UPDATE_MS = 400;
+  const SEPARATION_MIN_D = 32;
+  const SEPARATION_FORCE = 0.08;
+  const PICKUP_RADIUS    = 36;
+  const PICKUP_DELAY_MS  = 30;
+  const AI_THROW_TIMEOUT = 1200;
 
   const coeff = {
     techSpeed: 7.0, powerSpeed: 10.8, specialSpeed: 12.5,
@@ -111,7 +111,7 @@
     catchWindowMs: 110,
     recoverPerSec: 3,
     knockTech:[8,14], knockPower:[18,26], knockSpcl:[28,40],
-    gaugeTime: 680 // 片道（往復表示）
+    gaugeTime: 680
   };
 
   // ===== Utils =====
@@ -121,7 +121,7 @@
   const pingpong=(t)=>{ t%=2; return t<1?t:2-t; };
   const dist=(ax,ay,bx,by)=>Math.hypot(ax-bx, ay-by);
 
-  function showToast(s){ // rename
+  function showToast(s){
     toastEl.textContent=s;
     toastEl.style.opacity=1;
     clearTimeout(showToast._t);
@@ -141,16 +141,22 @@
       this.dead=false; this.fade=1; this.hurt=0; this.cool=0;
       this.specialLeft=2; this.aiNext=now()+rand(100,180);
       this.vx=0; this.vy=0;
-      this.anchorId=-1; // どのアンカーを追うか
+      this.anchorId=-1;
     }
     rect(){ return {x:this.x-16,y:this.y-28,w:this.w,h:this.h}; }
   }
   class Ball{
-    constructor(){ this.x=CX; this.y=(TOP+BOT)/2; this.vx=0; this.vy=0; this.owner=null;
-                   this.state='free'; this.lastThrow=0; this.lastChoice='power'; this.reserveId=null; }
+    constructor(){
+      this.x=CX; this.y=(TOP+BOT)/2; this.vx=0; this.vy=0;
+      this.owner=null;          // owned中のみ所有者
+      this.throwerSide=null;    // 空中中は投げた側だけ保持
+      this.state='free';        // 'free' | 'owned' | 'air'
+      this.lastThrow=0; this.lastChoice='power';
+      this.reserveId=null;
+    }
   }
 
-  // Teams（同一キャラ3vs3）
+  // Teams
   const L=[new Player('L', LB+84, 200, true),
            new Player('L', LB+60, 150, false),
            new Player('L', LB+60, 300, false)];
@@ -168,7 +174,7 @@
   let anchorPts={L:[],R:[]}; // {x,y}×3
   let lastAnchorUpdate=0, lastAssignUpdate=0;
 
-  // ===== iOS スクロール抑止用：Canvas pointer =====
+  // ===== iOS scroll prevent on canvas =====
   cv.addEventListener('touchstart', e=>{ e.preventDefault(); }, {passive:false});
   cv.addEventListener('touchmove',  e=>{ e.preventDefault(); }, {passive:false});
   cv.addEventListener('touchend',   e=>{ e.preventDefault(); }, {passive:false});
@@ -194,7 +200,6 @@
     knob.style.left=(50 + dx/(r.width/2)*50)+'%'; knob.style.top=(50 + dy/(r.height/2)*50)+'%';
     joyVec={x:dx/maxR, y:dy/maxR};
   }
-  // pointer/touch: passive:false でスクロール無効
   joy.addEventListener('mousedown', e=>joySet(e,true), {passive:false});
   window.addEventListener('mouseup', e=>joySet(e,false), {passive:false});
   window.addEventListener('mousemove', e=>{ if(joyActive) joyMove(e); }, {passive:false});
@@ -227,14 +232,11 @@
     const x=(e.clientX-r.left)/(r.width/cv.width);
     const y=(e.clientY-r.top)/(r.height/cv.height);
 
-    // ゲージ停止（往復）
     if(gauge && !gauge.done){ gauge.tap=now(); gauge.done=true; return; }
 
-    // 敵選択
     const hit = pickEnemyAt(x,y,R);
     if(hit){ selectedEnemy=hit; human.target=hit; openMenuAbove(hit); return; }
 
-    // 空白タップ → メニュー閉じ
     closeMenu(); selectedEnemy=null; human.target=null;
   });
 
@@ -249,8 +251,7 @@
   function openMenuAbove(enemy){
     const stage = document.getElementById('stage').getBoundingClientRect();
     const rect=cv.getBoundingClientRect();
-    // いったん表示して幅を確定させる
-    headMenu.style.display='flex';
+    headMenu.style.display='flex'; // 先に出して幅確定
     const ex = (enemy.x/cv.width) * rect.width + rect.left;
     const ey = ((enemy.rect().y-10)/cv.height) * rect.height + rect.top;
     headMenu.style.left = (ex - stage.left - headMenu.offsetWidth/2) + 'px';
@@ -282,16 +283,21 @@
     const dx=target.x-who.x, dy=target.y-who.y, ang=Math.atan2(dy,dx);
     ball.x=who.x + Math.cos(ang)*18; ball.y=who.y + Math.sin(ang)*12;
     ball.vx=Math.cos(ang)*spd; ball.vy=Math.sin(ang)*(spd*0.55);
-    ball.owner=who; ball.state='air'; ball.lastThrow=now(); ball.lastChoice=choice;
-    ball.reserveId=null; // 予約解除
+    // ★空中中は所有者を外し、投げた側だけ記録
+    ball.owner=null;
+    ball.throwerSide=who.side;
+    ball.state='air';
+    ball.lastThrow=now();
+    ball.lastChoice=choice;
+    ball.reserveId=null;
     who.cool=160;
+    // AIゲージは別管理（ここでは触らない）
   }
 
   // ===== Catch / Pickup =====
   function canAttemptCatch(p){
     if(p.dead) return false;
     if(ball.state!=='air') return false;
-    if(!ball.owner || ball.owner===p) return false;
     const towardLeft = ball.vx<0;
     if(p.side==='L' && !towardLeft) return false;
     if(p.side==='R' && towardLeft) return false;
@@ -301,8 +307,17 @@
     const elapsed = now()-ball.lastThrow; const center = 520;
     const diff = Math.abs(elapsed - center);
     const ok = diff < p.catchBonusMs;
-    if(ok){ pickupBall(p,true); showToast('キャッチ！'); }
-    else { p.hurt=120; }
+    if(ok){
+      pickupBall(p,true); showToast('キャッチ！');
+    }else{
+      // ★失敗：前にこぼす（進行方向へ弱く）
+      const keepX = ball.vx, keepY = ball.vy;
+      ball.vx = keepX*0.5; ball.vy = keepY*0.3;
+      ball.x += keepX*0.2; ball.y += keepY*0.2;
+      ball.owner=null; ball.state='free'; ball.lastThrow=now();
+      ball.reserveId=null; // この後、予約ロジックが拾う
+      p.hurt=120;
+    }
   }
   function pickupBall(p,fromAir=false){
     ball.owner=p; ball.state='owned'; ball.vx=ball.vy=0;
@@ -330,7 +345,7 @@
   // ===== Anchors（状況から3点を生成：固定役割なし） =====
   function computeAnchors(){
     function sideAnchors(side){
-      const oppHas = ball.owner && ball.owner.side !== side;
+      const oppHas = !!(ball.owner ? (ball.owner.side !== side) : (ball.state==='air' ? (ball.throwerSide !== side) : false));
       const ballOppHalf = (ball.x > CX && side==='L') || (ball.x < CX && side==='R');
       const defensive = oppHas || ballOppHalf;
 
@@ -340,9 +355,9 @@
 
       const ys = [150, 220, 300];
       return [
-        {x:A, y:ys[1]}, // センター
-        {x:B, y:ys[0]}, // 上
-        {x:B, y:ys[2]}, // 下
+        {x:A, y:ys[1]},
+        {x:B, y:ys[0]},
+        {x:B, y:ys[2]},
       ];
     }
     anchorPts.L = sideAnchors('L');
@@ -388,17 +403,17 @@
   function cpuThink(p){
     if(p.dead) return;
 
-    // 投げゲージ（自分の頭上に表示）→ 時間で必ず投げ切る
-    if(ball.owner===p && p.cool<=0){
+    // ★ 所有者のときだけ投球準備（air中は入らない＝連射防止）
+    if(ball.state==='owned' && ball.owner===p && p.cool<=0){
       if(!aiGauge){
-        const delay = rand(400,900); // 所持からゲージ開始まで
+        const delay = rand(400,900);
         aiGauge = { who:p, t0: now()+delay, choice: (p.stamina>24 && Math.random()<0.6)?'power':'tech',
                     timeoutAt: now()+delay+AI_THROW_TIMEOUT };
       }
       return;
     }
 
-    // 転がり回収予約
+    // free回収（予約制）
     if(ball.state==='free'){
       if(ball.reserveId==null){
         let best=null, bd=1e9;
@@ -409,7 +424,7 @@
       return;
     }
 
-    // アンカー追従（固定役割なし）
+    // アンカー追従
     const anchors = (p.side==='L')? anchorPts.L : anchorPts.R;
     const a = anchors[p.anchorId] || anchors[0];
     if(a){ moveToward(p, a.x, a.y, 0.75, false); }
@@ -437,12 +452,11 @@
     }
     timeEl.textContent = Math.ceil(timeLeft/1000);
 
-    // アンカー更新・割当（ヒステリシス）
     const tnow=now();
     if(tnow-lastAnchorUpdate>ANCHOR_UPDATE_MS){ computeAnchors(); lastAnchorUpdate=tnow; }
     if(tnow-lastAssignUpdate>ASSIGN_UPDATE_MS){ assignAnchors(); lastAssignUpdate=tnow; }
 
-    // Human move（ジョイスティック）
+    // Human move
     if(!human.dead){
       const len=Math.hypot(joyVec.x,joyVec.y)||1;
       const vx=(joyVec.x/len)*human.speed, vy=(joyVec.y/len)*human.speed;
@@ -477,18 +491,16 @@
     // CPU gauge（フレーム駆動 & 投げ切り保証）
     if(aiGauge){
       const ag = aiGauge;
-      if(!ag.who || ag.who.dead || ball.owner!==ag.who){ aiGauge=null; }
-      else {
-        if(tnow >= ag.t0){
-          const elapsed = tnow - ag.t0;
-          if(elapsed >= coeff.gaugeTime*0.8 || tnow >= ag.timeoutAt){
-            const enemies=(ag.who.side==='L'?R:L).filter(q=>!q.dead);
-            if(enemies.length){
-              enemies.sort((a,b)=>dist(ag.who.x,ag.who.y,a.x,a.y)-dist(ag.who.x,ag.who.y,b.x,b.y));
-              doThrow(ag.who, enemies[0], ag.choice, 0.82);
-            }
-            aiGauge=null;
+      if(!ag.who || ag.who.dead || ball.state!=='owned' || ball.owner!==ag.who){ aiGauge=null; }
+      else if(tnow >= ag.t0){
+        const elapsed = tnow - ag.t0;
+        if(elapsed >= coeff.gaugeTime*0.8 || tnow >= ag.timeoutAt){
+          const enemies=(ag.who.side==='L'?R:L).filter(q=>!q.dead);
+          if(enemies.length){
+            enemies.sort((a,b)=>dist(ag.who.x,ag.who.y,a.x,a.y)-dist(ag.who.x,ag.who.y,b.x,b.y));
+            doThrow(ag.who, enemies[0], ag.choice, 0.82);
           }
+          aiGauge=null;
         }
       }
     }
@@ -496,25 +508,40 @@
     // Ball physics
     if(ball.state==='air'){
       ball.x+=ball.vx; ball.y+=ball.vy; ball.vy*=0.995;
-      if(ball.y<TOP){ ball.y=TOP; ball.vy*=-0.6; }
-      if(ball.y>BOT){ ball.y=BOT; ball.vy*=-0.6; }
-      if(ball.x<LB){ ball.x=LB; ball.vx*=-0.6; }
-      if(ball.x>RB){ ball.x=RB; ball.vx*=-0.6; }
 
+      // 壁に当たったらfree化＆減速
+      let hitWall=false;
+      if(ball.y<TOP){ ball.y=TOP; ball.vy*=-0.5; }
+      if(ball.y>BOT){ ball.y=BOT; ball.vy*=-0.5; }
+      if(ball.x<LB){ ball.x=LB; ball.vx*=-0.5; hitWall=true; }
+      if(ball.x>RB){ ball.x=RB; ball.vx*=-0.5; hitWall=true; }
+      if(hitWall){ ball.state='free'; ball.lastThrow=tnow; }
+
+      // キャッチUI
       if(canAttemptCatch(human)) catchHint={who:human, until:tnow+480};
 
-      const enemies=(ball.owner && ball.owner.side==='L')?R:L;
+      // 当たり（投げた側の反対チームに判定）
+      const enemies=(ball.throwerSide==='L')? R : L;
       let hit=null;
       for(const e of enemies){
         if(e.dead) continue; const r=e.rect();
         if(ball.x>=r.x && ball.x<=r.x+r.w && ball.y>=r.y && ball.y<=r.y+r.h){ hit=e; break; }
       }
       if(hit){
-        onHit(hit, ball.lastChoice||'power', ball.owner||hit);
-        ball.state='free'; ball.owner=null; ball.vx=ball.vy=0; ball.lastThrow=tnow;
+        // ヒット → 相手にダメージ、ボールはfree
+        onHit(hit, ball.lastChoice||'power', {x:(ball.throwerSide==='L'? LB:RB), y:hit.y, stats:{Power:60}});
+        ball.state='free'; ball.owner=null; ball.vx=ball.vx*0.7; ball.vy=ball.vy*0.5; ball.lastThrow=tnow;
       }
+
+      // 長すぎる空中は強制free
+      const speed=Math.hypot(ball.vx,ball.vy);
+      if(speed<0.9 || (tnow - ball.lastThrow) > 1200){
+        ball.state='free'; ball.lastThrow=tnow;
+      }
+
     }else if(ball.state==='free'){
       ball.vx*=0.98; ball.vy*=0.98; ball.x+=ball.vx; ball.y+=ball.vy;
+      // 予約者が近ければ拾う
       if(tnow-ball.lastThrow>PICKUP_DELAY_MS){
         if(ball.reserveId && !ball.reserveId.dead && dist(ball.reserveId.x,ball.reserveId.y,ball.x,ball.y)<PICKUP_RADIUS){
           pickupBall(ball.reserveId);
@@ -568,14 +595,10 @@
     if(gauge){ drawGaugeAbove(gauge.who, gauge.choice, (now()-gauge.t0)/coeff.gaugeTime); }
 
     // CPUのゲージ（本人頭上）
-    if(aiGauge && aiGauge.who && ball.owner===aiGauge.who){
+    if(aiGauge && aiGauge.who && ball.state==='owned' && ball.owner===aiGauge.who){
       const tRaw = (now() - aiGauge.t0)/coeff.gaugeTime;
       drawGaugeAbove(aiGauge.who, aiGauge.choice, Math.max(0, tRaw));
-      if(tRaw>0.6){
-        const opp = (aiGauge.who.side==='L')? R : L;
-        for(const p of opp){ if(p===human){ ctx.fillStyle="#000a"; ctx.fillRect(p.x-36, p.y-56, 72, 14);
-          ctx.fillStyle="#fff"; ctx.font="10px monospace"; ctx.textAlign="center"; ctx.fillText("CATCH!", p.x, p.y-45); } }
-      }
+      if(tRaw>0.6 && aiGauge.who.side!=='L'){ /* 任意の演出。必要なら人間側にCATCHヒントなど */ }
     }
   }
 
@@ -598,11 +621,7 @@
     if(!paused){ step(ms); draw(); }
     requestAnimationFrame(loop);
   }
-
-  // ---- 初期アンカー計算してから開始（起動安定化） ----
-  computeAnchors();
-  assignAnchors();
-  loop();
+  computeAnchors(); assignAnchors(); loop();
 
   // ===== Window =====
   window.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeMenu(); selectedEnemy=null; } });
