@@ -82,7 +82,7 @@
   // ===== HUD refs =====
   const timeEl = document.getElementById('time');
   const spEl   = document.getElementById('sp');
-  const toast  = document.getElementById('toast');
+  const toastEl  = document.getElementById('toast'); // rename
 
   // ===== DOM menu =====
   const headMenu = document.getElementById('headMenu');
@@ -120,6 +120,13 @@
   const now=()=>performance.now();
   const pingpong=(t)=>{ t%=2; return t<1?t:2-t; };
   const dist=(ax,ay,bx,by)=>Math.hypot(ax-bx, ay-by);
+
+  function showToast(s){ // rename
+    toastEl.textContent=s;
+    toastEl.style.opacity=1;
+    clearTimeout(showToast._t);
+    showToast._t=setTimeout(()=>toastEl.style.opacity=0,1200);
+  }
 
   // ===== Entities =====
   class Player{
@@ -208,7 +215,7 @@
     el.addEventListener('click', ()=>{
       if(!selectedEnemy) return;
       const ch=el.dataset.choice;
-      if(ch==='sp' && human.specialLeft<=0){ toast('必殺なし'); return; }
+      if(ch==='sp' && human.specialLeft<=0){ showToast('必殺なし'); return; }
       startGauge(human, selectedEnemy, ch);
       closeMenu();
     });
@@ -232,7 +239,6 @@
   });
 
   // ===== Helpers =====
-  function toast(s){ toast.textContent=s; toast.style.opacity=1; clearTimeout(toast._t); toast._t=setTimeout(()=>toast.style.opacity=0,1200); }
   function pickEnemyAt(x,y,list){
     let best=null,bd=1e9;
     for(const p of list){
@@ -243,11 +249,12 @@
   function openMenuAbove(enemy){
     const stage = document.getElementById('stage').getBoundingClientRect();
     const rect=cv.getBoundingClientRect();
+    // いったん表示して幅を確定させる
+    headMenu.style.display='flex';
     const ex = (enemy.x/cv.width) * rect.width + rect.left;
     const ey = ((enemy.rect().y-10)/cv.height) * rect.height + rect.top;
     headMenu.style.left = (ex - stage.left - headMenu.offsetWidth/2) + 'px';
     headMenu.style.top  = (ey - stage.top) + 'px';
-    headMenu.style.display='flex';
     btnSp.disabled = human.specialLeft<=0;
   }
   function closeMenu(){ headMenu.style.display='none'; }
@@ -294,7 +301,7 @@
     const elapsed = now()-ball.lastThrow; const center = 520;
     const diff = Math.abs(elapsed - center);
     const ok = diff < p.catchBonusMs;
-    if(ok){ pickupBall(p,true); toast('キャッチ！'); }
+    if(ok){ pickupBall(p,true); showToast('キャッチ！'); }
     else { p.hurt=120; }
   }
   function pickupBall(p,fromAir=false){
@@ -322,22 +329,15 @@
 
   // ===== Anchors（状況から3点を生成：固定役割なし） =====
   function computeAnchors(){
-    // 状況判定
-    const oppOwns = ball.owner && (ball.owner.side==='L' ? true : false); // dummy for branch? we'll compute per side
-    // どちらの「攻守」も作る
     function sideAnchors(side){
       const oppHas = ball.owner && ball.owner.side !== side;
       const ballOppHalf = (ball.x > CX && side==='L') || (ball.x < CX && side==='R');
-
-      // 守備寄り or 攻撃寄り
       const defensive = oppHas || ballOppHalf;
 
-      // X 基準
       let A = (side==='L') ? CX-60 : CX+60; // 攻め時の前方
       let B = (side==='L') ? LB+72 : RB-72; // 後方
       if(defensive){ A = (side==='L')? CX-90 : CX+90; B = (side==='L')? LB+45 : RB-45; }
 
-      // レーンY（上・中・下）
       const ys = [150, 220, 300];
       return [
         {x:A, y:ys[1]}, // センター
@@ -349,20 +349,18 @@
     anchorPts.R = sideAnchors('R');
   }
 
-  // どのCPUがどのアンカーを追うか（最近傍割当）
   function assignAnchors(){
     function assign(team, anchors){
       const bots = team.filter(p=>!p.dead && !p.isHuman);
-      // 人間がアンカー近くにいる場合、そのアンカーは除外しておく（自然な空き）
-      const freeA = anchors.slice();
-      // greedy 割当
+      const used = new Set();
       for(const b of bots){
         let best=-1,bd=1e9;
-        for(let i=0;i<freeA.length;i++){
-          const a=freeA[i]; const d=dist(b.x,b.y,a.x,a.y);
+        for(let i=0;i<anchors.length;i++){
+          if(used.has(i)) continue;
+          const a=anchors[i]; const d=dist(b.x,b.y,a.x,a.y);
           if(d<bd){ bd=d; best=i; }
         }
-        if(best>=0){ b.anchorId = anchors.indexOf(freeA[best]); freeA.splice(best,1); }
+        if(best>=0){ b.anchorId = best; used.add(best); }
       }
     }
     assign(L, anchorPts.L);
@@ -403,15 +401,11 @@
     // 転がり回収予約
     if(ball.state==='free'){
       if(ball.reserveId==null){
-        // 最も近い生存者に予約
         let best=null, bd=1e9;
         for(const q of ALL){ if(q.dead) continue; const d=dist(q.x,q.y,ball.x,ball.y); if(d<bd){bd=d; best=q;} }
         if(best) ball.reserveId = best;
       }
-      // 予約者は最優先でボールへ
-      if(ball.reserveId===p){
-        moveToward(p, ball.x, ball.y, 0.95, true);
-      }
+      if(ball.reserveId===p){ moveToward(p, ball.x, ball.y, 0.95, true); }
       return;
     }
 
@@ -425,11 +419,9 @@
   function moveToward(p, tx, ty, ratio=0.7, fast=false){
     const dx=tx-p.x, dy=ty-p.y, d=Math.hypot(dx,dy);
     const sp = p.speed * (fast? ratio*1.2 : ratio);
-    // steering：近づいたら減速・デッドゾーン
     let vx = (d>0)? (dx/d)*sp : 0;
     let vy = (d>0)? (dy/d)*sp : 0;
     if(d<12){ vx*=d/12; vy*=d/12; }
-    // 既存速度にブレンド
     p.vx = p.vx*0.85 + vx*0.15;
     p.vy = p.vy*0.85 + vy*0.15;
   }
@@ -470,14 +462,11 @@
     // integrate velocity
     for(const p of ALL){
       if(p.dead){ p.fade=Math.max(0,p.fade-ms*0.002); continue; }
-      // cooldown & regen
       p.stamina = clamp(p.stamina + p.staRegen*(ms/1000), 0, p.staminaMax);
       if(p.hurt>0) p.hurt-=ms;
       if(p.cool>0) p.cool-=ms;
 
-      // 位置更新
       p.x += p.vx; p.y += p.vy;
-      // 緩やかブレーキ
       p.vx*=0.9; p.vy*=0.9;
       clampSide(p);
     }
@@ -490,13 +479,9 @@
       const ag = aiGauge;
       if(!ag.who || ag.who.dead || ball.owner!==ag.who){ aiGauge=null; }
       else {
-        // 開始時刻に達したら投げる準備（表示）
         if(tnow >= ag.t0){
-          // 進行割合（0..1..0を使うため pingpong は描画側。投球は閾値0.8で実行）
-          // ここでは時間経過を見る
           const elapsed = tnow - ag.t0;
           if(elapsed >= coeff.gaugeTime*0.8 || tnow >= ag.timeoutAt){
-            // 投げ切り（ターゲットは最も近い敵）
             const enemies=(ag.who.side==='L'?R:L).filter(q=>!q.dead);
             if(enemies.length){
               enemies.sort((a,b)=>dist(ag.who.x,ag.who.y,a.x,a.y)-dist(ag.who.x,ag.who.y,b.x,b.y));
@@ -516,10 +501,8 @@
       if(ball.x<LB){ ball.x=LB; ball.vx*=-0.6; }
       if(ball.x>RB){ ball.x=RB; ball.vx*=-0.6; }
 
-      // キャッチUI
       if(canAttemptCatch(human)) catchHint={who:human, until:tnow+480};
 
-      // 当たり
       const enemies=(ball.owner && ball.owner.side==='L')?R:L;
       let hit=null;
       for(const e of enemies){
@@ -531,14 +514,11 @@
         ball.state='free'; ball.owner=null; ball.vx=ball.vy=0; ball.lastThrow=tnow;
       }
     }else if(ball.state==='free'){
-      // 転がり：近い人がすぐ拾う（予約者優先）
       ball.vx*=0.98; ball.vy*=0.98; ball.x+=ball.vx; ball.y+=ball.vy;
       if(tnow-ball.lastThrow>PICKUP_DELAY_MS){
-        // 予約者が近ければ拾う
         if(ball.reserveId && !ball.reserveId.dead && dist(ball.reserveId.x,ball.reserveId.y,ball.x,ball.y)<PICKUP_RADIUS){
           pickupBall(ball.reserveId);
         }else{
-          // 予約者不在なら最寄り
           let best=null, bd=1e9;
           for(const p of ALL){ if(p.dead) continue; const d=dist(p.x,p.y,ball.x,ball.y); if(d<bd){bd=d; best=p;} }
           if(best && bd<PICKUP_RADIUS){ pickupBall(best); }
@@ -560,13 +540,10 @@
 
   // ===== Draw =====
   function draw(){
-    // 背景
     if(imgBG.complete && imgBG.naturalWidth>0) ctx.drawImage(imgBG,0,0,cv.width,cv.height);
     else { ctx.fillStyle='#063'; ctx.fillRect(0,0,cv.width,cv.height); }
-    // センターライン
     ctx.fillStyle="#ffffff55"; ctx.fillRect(CX-1,TOP,2,BOT-TOP);
 
-    // プレイヤー
     const list=ALL.slice().sort((a,b)=>a.y-b.y);
     for(const p of list){
       const r=p.rect();
@@ -584,18 +561,16 @@
       ctx.restore();
     }
 
-    // ボール
     if(imgBall.complete && imgBall.naturalWidth>0) ctx.drawImage(imgBall, Math.round(ball.x-8), Math.round(ball.y-8), 16,16);
     else { ctx.fillStyle="#f90"; ctx.fillRect(ball.x-4,ball.y-4,8,8); }
 
     // 人間のゲージ（本人頭上）
     if(gauge){ drawGaugeAbove(gauge.who, gauge.choice, (now()-gauge.t0)/coeff.gaugeTime); }
 
-    // CPUのゲージ（本人頭上・予告。人間が合わせやすい）
+    // CPUのゲージ（本人頭上）
     if(aiGauge && aiGauge.who && ball.owner===aiGauge.who){
       const tRaw = (now() - aiGauge.t0)/coeff.gaugeTime;
       drawGaugeAbove(aiGauge.who, aiGauge.choice, Math.max(0, tRaw));
-      // 終盤は相手側にCATCHヒント
       if(tRaw>0.6){
         const opp = (aiGauge.who.side==='L')? R : L;
         for(const p of opp){ if(p===human){ ctx.fillStyle="#000a"; ctx.fillRect(p.x-36, p.y-56, 72, 14);
@@ -623,6 +598,10 @@
     if(!paused){ step(ms); draw(); }
     requestAnimationFrame(loop);
   }
+
+  // ---- 初期アンカー計算してから開始（起動安定化） ----
+  computeAnchors();
+  assignAnchors();
   loop();
 
   // ===== Window =====
