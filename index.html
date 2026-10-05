@@ -359,6 +359,16 @@ img,canvas,button,div,section,nav,main{
 }
 .bg-clear-note{font-size:11px;color:#d7cfdb;line-height:1.5}
 
+
+/* background tap stability */
+button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
+  touch-action:manipulation;
+  pointer-events:auto;
+}
+[data-panel="bg"]{position:relative;z-index:1}
+[data-panel="bg"] .section{position:relative;z-index:2}
+[data-panel="bg"] button{position:relative;z-index:3}
+
 </style>
 </head>
 <body>
@@ -553,35 +563,10 @@ img,canvas,button,div,section,nav,main{
         </div>
 
         <div class="section">
-          <div class="section-title">スマート背景 <small>縦写真の余白にも有効</small></div>
-          <div class="chips" id="bgModeChips">
-            <button class="chip active" data-bg="design">DESIGN</button>
-            <button class="chip" data-bg="blur">BLUR PHOTO</button>
-            <button class="chip" data-bg="mirror">MIRROR</button>
-            <button class="chip" data-bg="solid">SOLID</button>
-            <button class="chip" data-bg="paletteGradient">PALETTE</button>
-          </div>
-          <div class="control"><label>背景演出の強さ <output id="bgStrengthOut">70%</output></label><input id="bgStrength" type="range" min="0" max="100" value="70"></div>
+          <div class="section-title">背景設定 <small>下部の「背景」タブに統合しました</small></div>
+          <div class="note">背景は下部メニューの「背景」から変更できます。背景の選択と解除を1か所にまとめています。</div>
         </div>
 
-
-        <div class="section">
-          <div class="section-title">明るい背景パターン <small>ピンク / ピンクゴールド / 緑 / 黄色</small></div>
-          <div class="template-grid" id="patternGrid">
-            <button class="template-card bg-pattern-card" data-pattern="pinkStripe" style="--tpl:repeating-linear-gradient(0deg,#ffd6e5 0 24px,#ffb8cf 24px 48px)">PINK STRIPE<small>明るい縞</small></button>
-            <button class="template-card bg-pattern-card" data-pattern="pinkDiag" style="--tpl:repeating-linear-gradient(45deg,#ffd8e8 0 24px,#ffb7d0 24px 48px)">PINK DIAGONAL<small>斜め縞</small></button>
-            <button class="template-card bg-pattern-card" data-pattern="pinkDot" style="--tpl:radial-gradient(circle,#ffc4d8 20%,transparent 21%),#ffe4ee">PINK DOT<small>大きめ水玉</small></button>
-            <button class="template-card bg-pattern-card" data-pattern="pinkGoldStripe" style="--tpl:repeating-linear-gradient(0deg,#ffe7dc 0 24px,#f7d0c0 24px 48px)">PINK GOLD<small>縞</small></button>
-            <button class="template-card bg-pattern-card" data-pattern="pinkGoldDiag" style="--tpl:repeating-linear-gradient(45deg,#ffefe7 0 24px,#ecc8ba 24px 48px)">PINK GOLD<small>斜め縞</small></button>
-            <button class="template-card bg-pattern-card" data-pattern="greenStripe" style="--tpl:repeating-linear-gradient(0deg,#e1ffe4 0 24px,#c1f3c8 24px 48px)">GREEN STRIPE<small>明るい緑</small></button>
-            <button class="template-card bg-pattern-card" data-pattern="greenDiag" style="--tpl:repeating-linear-gradient(45deg,#e5ffe8 0 24px,#c6f4cb 24px 48px)">GREEN DIAGONAL<small>斜め縞</small></button>
-            <button class="template-card bg-pattern-card" data-pattern="greenDot" style="--tpl:radial-gradient(circle,#bbefc0 20%,transparent 21%),#edfff0">GREEN DOT<small>大きめ水玉</small></button>
-            <button class="template-card bg-pattern-card" data-pattern="yellowStripe" style="--tpl:repeating-linear-gradient(0deg,#fff8c9 0 24px,#ffe98f 24px 48px)">YELLOW STRIPE<small>明るい黄</small></button>
-            <button class="template-card bg-pattern-card" data-pattern="yellowDiag" style="--tpl:repeating-linear-gradient(45deg,#fff9cf 0 24px,#ffec97 24px 48px)">YELLOW DIAGONAL<small>斜め縞</small></button>
-            <button class="template-card bg-pattern-card" data-pattern="yellowDot" style="--tpl:radial-gradient(circle,#ffe57f 20%,transparent 21%),#fffce3">YELLOW DOT<small>大きめ水玉</small></button>
-            <button class="template-card bg-pattern-card" data-pattern="mintCandy" style="--tpl:repeating-linear-gradient(135deg,#e8fff1 0 22px,#cbf7db 22px 44px,#fff3b2 44px 66px)">MINT CANDY<small>ミント × レモン</small></button>
-          </div>
-        </div>
         <div class="section">
           <div class="section-title">デザインエフェクト <small>写真を壊さず上から演出</small></div>
           <div class="fx-grid">
@@ -803,7 +788,7 @@ img,canvas,button,div,section,nav,main{
 <div class="toast" id="toast"></div>
 
 <script>
-/* KoKoRoの写真館 GitHub READY DELUXE v2 - photo slots / bg tab / template clear / save-to-photos */
+/* KoKoRoの写真館 GitHub READY DELUXE v3 - background tap fixed */
 (() => {
   "use strict";
   const $ = s => document.querySelector(s);
@@ -907,6 +892,7 @@ img,canvas,button,div,section,nav,main{
     if(innerWidth<821) document.querySelector(".editor").scrollIntoView({behavior:"smooth",block:"nearest"});
   }
   $$(".tab").forEach(b=>b.addEventListener("click",()=>setTab(b.dataset.tab)));
+  $$('.tab[data-tab="bg"]').forEach(b=>b.addEventListener("pointerup",()=>setTab("bg")));
 
   fonts.forEach(([label,val])=>{
     const o=document.createElement("option");o.value=val;o.textContent=label;o.style.fontFamily=val;$("#fontSelect").appendChild(o);
@@ -1931,7 +1917,7 @@ img,canvas,button,div,section,nav,main{
     state.customBg=state.palette[2]||"#151218";state.customGradient=[state.palette[0],state.palette[1]];
     $$("#layoutChips .chip").forEach(b=>b.classList.toggle("active",b.dataset.layout===state.layout));
     applyFilterPreset(p.filter);repositionForLayout();syncFrameUI();syncBgUI();syncFxUI();updateTextControls();renderTextLayers();
-    $$(".template-card").forEach(b=>b.classList.toggle("active",b.dataset.template===name));
+    $$("#templateGrid .template-card").forEach(b=>b.classList.toggle("active",b.dataset.template===name));
     render();recordHistory();toast(`${name.toUpperCase()} を適用しました`)
   }
 
@@ -1939,7 +1925,7 @@ img,canvas,button,div,section,nav,main{
   function clearTemplate(fullReset=false){
     recordHistory();
     state.currentTemplate="";
-    $$(".template-card").forEach(b=>b.classList.remove("active"));
+    $$("#templateGrid .template-card").forEach(b=>b.classList.remove("active"));
     if(fullReset){
       state.frame="none";
       state.layout="auto";
@@ -2104,7 +2090,7 @@ img,canvas,button,div,section,nav,main{
     $$("#multiPhotoChips .chip").forEach(b=>b.classList.toggle("active",b.dataset.multi===state.multiMode));
     $$(".mood").forEach(b=>b.classList.toggle("active",b.dataset.mood===state.mood));
     $$("#patternGrid .bg-pattern-card").forEach(b=>b.classList.toggle("active",b.dataset.pattern===state.bgPatternPreset));
-    $$(".template-card").forEach(b=>b.classList.toggle("active",b.dataset.template===state.currentTemplate || (state.currentTemplate==="" && false)));
+    $$("#templateGrid .template-card").forEach(b=>b.classList.toggle("active",b.dataset.template===state.currentTemplate));
     refreshPrimaryPhoto();
     syncFrameUI();syncBgUI();syncFxUI();renderTextLayers();updateTextControls();syncOutputs();render();
     historyBusy=false
@@ -2340,7 +2326,7 @@ img,canvas,button,div,section,nav,main{
   $("#photoTitleToggle").onclick=()=>{state.photoTitleVisible=!state.photoTitleVisible;syncOutputs();render()};
   $("#photoTitleStyle").onchange=e=>{state.photoTitleStyle=e.target.value;render()};
   $$("#multiPhotoChips .chip").forEach(b=>b.onclick=()=>{recordHistory();state.multiMode=b.dataset.multi;$$('#multiPhotoChips .chip').forEach(x=>x.classList.toggle('active',x===b));if(state.multiMode!=="single"&&state.layout==="auto") setLayout("framefull"); else {repositionForLayout();render();}recordHistory()});
-  $$("#patternGrid .bg-pattern-card").forEach(b=>b.onclick=()=>{recordHistory();state.currentTemplate="";state.bgMode="pattern";state.bgPatternPreset=b.dataset.pattern;syncBgUI();$$('#patternGrid .bg-pattern-card').forEach(x=>x.classList.toggle('active',x===b));render();recordHistory();toast("背景パターンを適用しました")});
+  $$("#patternGrid .bg-pattern-card").forEach(b=>b.addEventListener("click",()=>{recordHistory();state.currentTemplate="";state.bgMode="pattern";state.bgPatternPreset=b.dataset.pattern;syncBgUI();render();recordHistory();toast("背景パターンを適用しました")}));
 
   $("#templateClearBtn").onclick=()=>clearTemplate(false);
   $("#templateResetBtn").onclick=()=>clearTemplate(true);
@@ -2364,8 +2350,8 @@ img,canvas,button,div,section,nav,main{
   $("#brandTuneBtn").onclick=async()=>{if(!state.photo)return toast("先に写真を選んでください");recordHistory();if(!state.analysis.brightness)await analyzePhoto();brandTune();recordHistory()};
   $("#instaOptimizeBtn").onclick=()=>instagramOptimize("balanced");
   $("#gridPreviewBtn").onclick=()=>{if(!state.photo)return toast("先に写真を選んでください");recordHistory();applyGridPreviewPosition();render();recordHistory();toast("グリッドで目立ちやすい上寄せ配置にしました")};
-  $$(".template-card").forEach(b=>b.onclick=()=>applyTemplate(b.dataset.template));
-  $$("#bgModeChips .chip").forEach(b=>b.onclick=()=>{recordHistory();state.currentTemplate="";state.bgMode=b.dataset.bg;if(state.bgMode==="pattern" && !state.bgPatternPreset) state.bgPatternPreset="pinkStripe";syncBgUI();render();recordHistory()});
+  $$("#templateGrid .template-card").forEach(b=>b.onclick=()=>applyTemplate(b.dataset.template));
+  $$("#bgModeChips .chip").forEach(b=>b.addEventListener("click",()=>{recordHistory();state.currentTemplate="";state.bgMode=b.dataset.bg;if(state.bgMode==="pattern" && !state.bgPatternPreset) state.bgPatternPreset="pinkStripe";syncBgUI();render();recordHistory()}));
   $("#bgStrength").oninput=e=>{state.bgStrength=+e.target.value/100;syncBgUI();render()};
   $$(".fx-btn").forEach(b=>b.onclick=()=>{recordHistory();const k=b.dataset.fx;state.fx[k]=!state.fx[k];syncFxUI();render();recordHistory()});
   $("#fxStrength").oninput=e=>{state.fx.strength=+e.target.value/100;syncFxUI();render()};
@@ -2462,23 +2448,18 @@ img,canvas,button,div,section,nav,main{
     document.addEventListener("contextmenu", prevent, {passive:false});
     document.addEventListener("dblclick", prevent, {passive:false});
     document.addEventListener("dragstart", prevent, {passive:false});
-    document.addEventListener("selectstart", prevent, {passive:false});
+    document.addEventListener("selectstart", e=>{
+      const tag=e.target?.tagName;
+      if(tag!=="INPUT" && tag!=="TEXTAREA" && tag!=="SELECT") e.preventDefault();
+    }, {passive:false});
 
     ["gesturestart","gesturechange","gestureend"].forEach(type=>{
       document.addEventListener(type, prevent, {passive:false});
     });
 
-    let lastTouchEnd=0;
+    // Pinchだけ止める。素早い通常タップは止めない。
     document.addEventListener("touchstart", e=>{
       if(e.touches && e.touches.length>1) e.preventDefault();
-    }, {passive:false});
-
-    document.addEventListener("touchend", e=>{
-      const now=Date.now();
-      if(now-lastTouchEnd<360){
-        e.preventDefault();
-      }
-      lastTouchEnd=now;
     }, {passive:false});
   }
   installAbsoluteInteractionLock();
