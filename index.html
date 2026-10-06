@@ -8,7 +8,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Bungee&family=Caveat:wght@500;700&family=Cinzel:wght@500;700&family=Cormorant+Garamond:wght@500;700&family=Montserrat:wght@500;700;800&family=Noto+Sans+JP:wght@400;600;800&family=Noto+Serif+JP:wght@500;700&family=Orbitron:wght@500;700&family=Pacifico&family=Playfair+Display:wght@600;800&family=Zen+Kurenaido&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Bungee&family=Caveat:wght@500;700&family=Cinzel:wght@500;700&family=Cormorant+Garamond:wght@500;700&family=M+PLUS+Rounded+1c:wght@400;500;700;800&family=Montserrat:wght@500;700;800&family=Noto+Sans+JP:wght@400;600;800&family=Noto+Serif+JP:wght@500;700&family=Orbitron:wght@500;700&family=Pacifico&family=Playfair+Display:wght@600;800&family=Zen+Kurenaido&display=swap" rel="stylesheet">
 
 <style>
 :root{
@@ -369,13 +369,46 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
 [data-panel="bg"] .section{position:relative;z-index:2}
 [data-panel="bg"] button{position:relative;z-index:3}
 
+
+.text-align-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.pro-note{
+  margin-top:8px;padding:10px 12px;border-radius:12px;
+  background:linear-gradient(135deg,rgba(84,229,255,.12),rgba(125,85,255,.10));
+  border:1px solid rgba(255,255,255,.08);font-size:10px;line-height:1.6;color:#d8d0de
+}
+.panel[data-panel="bg"] .template-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+}
+
+
+/* ===== v8 MAX editor expansion ===== */
+.pro-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.pro-grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.layer-manager{display:flex;flex-direction:column;gap:7px;max-height:250px;overflow:auto}
+.layer-item{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:9px 10px;border:1px solid var(--line);border-radius:12px;background:#1b1721;font-size:11px}
+.layer-item.active{outline:2px solid #54e5ff;background:rgba(84,229,255,.10)}
+.layer-meta{display:flex;gap:6px;align-items:center;color:#aaa1b4;font-size:9px}
+.layer-actions{display:flex;gap:5px}.layer-actions button{min-width:34px;min-height:32px;border-radius:9px}
+.mini-card{padding:10px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.035)}
+.stamp-bank{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.stamp-bank button{min-height:48px;border-radius:12px;border:1px solid var(--line);background:#1b1721;font-size:10px;font-weight:900}
+.stamp-bank button.active{outline:2px solid #fff}
+.history-list{display:flex;flex-direction:column;gap:6px;max-height:190px;overflow:auto}.history-entry{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px;border:1px solid var(--line);border-radius:10px;background:#1a1620;font-size:10px}.history-entry.active{outline:2px solid #54e5ff}
+.brand-template-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.brand-template-grid button{min-height:42px;border:1px solid var(--line);border-radius:12px;background:#211b29;font-size:9px;font-weight:900}
+.product-preview-chip{padding:5px 8px;border-radius:999px;background:rgba(255,255,255,.10);font-size:9px;color:#ddd}
+.complete-modal-card{max-width:480px;width:100%;margin:auto;background:#17131d;border:1px solid var(--line);border-radius:24px;padding:18px;box-shadow:0 24px 70px #0008}
+.complete-modal-card h2{margin:0 0 8px;font-size:22px}.complete-modal-card p{font-size:11px;color:#aaa1b4;line-height:1.6}.complete-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.ig-grid-preview{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;background:#222;padding:3px;border-radius:14px;overflow:hidden}.ig-grid-preview>div{aspect-ratio:1;background:#f2f2f2;overflow:hidden;position:relative}.ig-grid-preview img{width:100%;height:100%;object-fit:cover}.ig-grid-preview .center{outline:3px solid #ff2776;outline-offset:-3px}
+@media(max-width:820px){.stamp-bank{grid-template-columns:repeat(4,1fr)}.brand-template-grid{grid-template-columns:repeat(3,1fr)}.pro-grid3{grid-template-columns:repeat(3,1fr)}}
+
+.quick-pro-dock{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:7px}.quick-pro-dock button{min-height:38px;border:1px solid var(--line);border-radius:12px;background:#1b1721;font-size:10px;font-weight:900}@media(max-width:420px){.quick-pro-dock{grid-template-columns:repeat(3,1fr)}}
 </style>
 </head>
 <body>
 <div class="app">
   <header class="topbar">
     <div class="brand">
-      <img data-kokoro-logo alt="KoKoRo logo">
+      <img data-kokoro-classic-logo alt="KoKoRo logo">
       <div><h1>KoKoRoの写真館</h1><small>Square Fashion Photo Studio</small></div>
     </div>
     <div class="top-actions">
@@ -410,6 +443,7 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
         <button class="quick" id="quickAuto">✦ AI AUTO</button>
         <button class="quick" id="quickText">T 一言文字</button>
       </div>
+      <div class="quick-pro-dock"><button data-quick-tab="photo">写真編集</button><button data-quick-tab="text">文字</button><button data-quick-tab="bg">背景</button><button data-quick-tab="frame">枠</button><button data-quick-tab="stamp">スタンプ</button><button data-quick-tab="layout">レイヤー</button></div>
     </section>
 
     <section class="editor">
@@ -420,7 +454,7 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
         <button class="tab" data-tab="bg"><span class="i">◌</span>背景</button>
         <button class="tab" data-tab="text"><span class="i">T</span>文字</button>
         <button class="tab" data-tab="frame"><span class="i">▣</span>枠</button>
-        <button class="tab" data-tab="stamp"><span class="i">◎</span>ロゴ</button>
+        <button class="tab" data-tab="stamp"><span class="i">◎</span>素材</button>
         <button class="tab" data-tab="export"><span class="i">⇩</span>保存</button>
       </nav>
 
@@ -488,6 +522,26 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
           <div class="note">写真を複数選ぶと、先頭から順に配置します。足りない場合は同じ写真を繰り返して表示します。</div>
         </div>
         <div class="section">
+          <div class="section-title">選択写真の個別編集 <small>6枚それぞれ別設定</small></div>
+          <div class="pro-grid"><input class="textinput" id="slotTitleIndividual" placeholder="この写真だけのタイトル"><button class="switch on" id="slotTitleVisibleBtn">タイトル ON</button></div>
+          <div class="control"><label>個別ズーム <output id="slotZoomOut">100%</output></label><input id="slotZoom" type="range" min="70" max="260" value="100"></div>
+          <div class="control"><label>左右位置 <output id="slotXOut">0</output></label><input id="slotX" type="range" min="-300" max="300" value="0"></div>
+          <div class="control"><label>上下位置 <output id="slotYOut">0</output></label><input id="slotY" type="range" min="-300" max="300" value="0"></div>
+          <div class="pro-grid3">
+            <div><label style="font-size:10px">明るさ</label><input id="slotBrightness" type="range" min="60" max="150" value="100"></div>
+            <div><label style="font-size:10px">彩度</label><input id="slotSaturation" type="range" min="0" max="180" value="100"></div>
+            <div><label style="font-size:10px">コントラスト</label><input id="slotContrast" type="range" min="60" max="160" value="100"></div>
+          </div>
+          <div class="pro-grid3" style="margin-top:8px">
+            <button class="switch" id="slotMonoBtn">モノクロ OFF</button>
+            <button class="switch" id="slotShadowBtn">写真影 OFF</button>
+            <button class="switch" id="slotResetBtn">個別リセット</button>
+          </div>
+          <div class="pro-grid3" style="margin-top:8px"><button class="switch" id="slotBorderBtn">写真枠 OFF</button><input type="color" id="slotBorderColor" value="#ffffff"><input id="slotBorderWidth" type="range" min="1" max="20" value="4"></div>
+          <div class="control"><label>角丸 <output id="slotRoundOut">18</output></label><input id="slotRound" type="range" min="0" max="80" value="18"></div>
+        </div>
+
+        <div class="section">
           <div class="section-title">写真タイトル <small>写真の下部に少しかぶせて表示</small></div>
           <input class="textinput" id="photoTitleInput" placeholder="例：Autumn Collection / Look 01">
           <div class="grid2" style="margin-top:8px">
@@ -533,6 +587,9 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
             <button class="ai-action" id="brandTuneBtn"><strong>✦</strong> KoKoRo調整</button>
             <button class="ai-action" id="instaOptimizeBtn"><strong>◎</strong> Instagram最適化</button>
             <button class="ai-action" id="gridPreviewBtn"><strong>◎</strong> グリッド意識配置</button>
+            <button class="ai-action" id="coverModeBtn"><strong>◎</strong> 投稿1枚目 COVER</button>
+            <button class="ai-action" id="feed45Btn"><strong>◎</strong> Feed 4:5</button>
+            <button class="ai-action" id="story916Btn"><strong>◎</strong> Story / Reel 9:16</button>
           </div>
           <div class="smart-note"><span class="status-dot"></span>対応ブラウザでは顔検出も安全配置の補助に利用します。未対応時は画像の情報量解析で代替します。</div>
         </div>
@@ -581,6 +638,24 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
         </div>
 
         <div class="section">
+          <div class="section-title">ブランド投稿テンプレート <small>1タップで見出し作成</small></div>
+          <div class="brand-template-grid" id="brandTemplateGrid">
+            <button data-brand-copy="NEW ITEM">NEW ITEM</button><button data-brand-copy="NEW COLLECTION">NEW COLLECTION</button><button data-brand-copy="LIMITED">LIMITED</button><button data-brand-copy="RESTOCK">RESTOCK</button><button data-brand-copy="SOLD OUT">SOLD OUT</button><button data-brand-copy="ORDER">ORDER</button><button data-brand-copy="SALE">SALE</button><button data-brand-copy="LOOK BOOK">LOOK BOOK</button><button data-brand-copy="ACCESSORY">ACCESSORY</button><button data-brand-copy="EVENT">EVENT</button><button data-brand-copy="THANK YOU">THANK YOU</button><button data-brand-copy="PICK UP">PICK UP</button>
+          </div>
+        </div>
+        <div class="section">
+          <div class="section-title">KoKoRoブランドキット <small>カラー・フォントを保存</small></div>
+          <div class="pro-grid3"><input type="color" id="brandPrimary" value="#ff8fb8"><input type="color" id="brandSecondary" value="#ffe38c"><input type="color" id="brandText" value="#5d3347"></div>
+          <select id="brandFont" style="margin-top:8px"></select>
+          <div class="pro-grid" style="margin-top:8px"><button class="switch" id="applyBrandKitBtn">KoKoRo STYLE適用</button><button class="switch" id="saveBrandKitBtn">ブランドキット保存</button></div>
+        </div>
+        <div class="section">
+          <div class="section-title">MYプリセット <small>自分のデザインを保存</small></div>
+          <div class="pro-grid"><input class="textinput" id="presetName" placeholder="プリセット名"><select id="presetSelect"><option value="">保存済みなし</option></select></div>
+          <div class="pro-grid3" style="margin-top:8px"><button class="switch" id="savePresetBtn">保存</button><button class="switch" id="applyPresetBtn">適用</button><button class="switch" id="deletePresetBtn">削除</button></div>
+        </div>
+
+        <div class="section">
           <div class="section-title">AIコピーアシスト <small>ブランド投稿用の短い見出し</small></div>
           <input class="textinput" id="copyKeyword" placeholder="例：新作 / 秋 / accessory / pink">
           <button class="switch" id="generateCopyBtn" style="width:100%;margin-top:8px">✦ 見出し候補を作る</button>
@@ -606,6 +681,27 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
             <button class="chip" data-layout="card">カード</button>
           </div>
         </div>
+        <div class="section">
+          <div class="section-title">コラージュPRO <small>写真間隔・形・構成</small></div>
+          <div class="chips" id="collagePresetChips">
+            <button class="chip" data-collage="grid4">2×2</button><button class="chip" data-collage="bigLeft">左大＋右2</button><button class="chip" data-collage="bigTop3">上大＋下3</button><button class="chip" data-collage="polaroid">ポラロイド</button>
+          </div>
+          <div class="control"><label>写真間隔 <output id="collageGapOut">18</output></label><input id="collageGap" type="range" min="0" max="60" value="18"></div>
+          <div class="control"><label>共通角丸 <output id="collageRoundOut">18</output></label><input id="collageRound" type="range" min="0" max="60" value="18"></div>
+        </div>
+        <div class="section">
+          <div class="section-title">レイヤー管理 <small>選択・複製・非表示・ロック・削除</small></div>
+          <div class="layer-manager" id="layerManager"></div>
+          <div class="pro-grid3" style="margin-top:8px"><button class="switch" id="layerUpBtn">↑ 上へ</button><button class="switch" id="layerDownBtn">↓ 下へ</button><button class="switch" id="layerDuplicateBtn">複製</button><button class="switch" id="layerHideBtn">表示切替</button><button class="switch" id="layerLockBtn">ロック</button><button class="switch" id="layerDeleteBtn">削除</button></div>
+        </div>
+        <div class="section">
+          <div class="section-title">商品情報カード <small>衣装・アクセサリー投稿向け</small></div>
+          <div class="pro-grid"><input class="textinput" id="productName" placeholder="商品名"><input class="textinput" id="productPrice" placeholder="PRICE"></div>
+          <div class="pro-grid" style="margin-top:8px"><input class="textinput" id="productColor" placeholder="COLOR"><input class="textinput" id="productSize" placeholder="SIZE"></div>
+          <div class="pro-grid" style="margin-top:8px"><select id="productStatus"><option>NEW</option><option>LIMITED</option><option>RESTOCK</option><option>SOLD OUT</option><option>ORDER</option></select><select id="productCardStyle"><option value="paper">Paper</option><option value="metal">Metal</option><option value="pink">Pink</option><option value="minimal">Minimal</option></select></div>
+          <div class="pro-grid" style="margin-top:8px"><button class="switch" id="productToggleBtn">カード表示 OFF</button><button class="switch" id="productPositionBtn">右下へ</button></div>
+        </div>
+
         <div class="section">
           <div class="section-title">デザインムード <small>配色＋枠＋文字の組み合わせ</small></div>
           <div class="moods" id="moods">
@@ -642,27 +738,46 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
           <div class="bg-clear-note">背景解除で、明るいシンプル背景に戻せます。選択中の背景やパターンは白い枠で表示されます。</div>
         </div>
         <div class="section">
+          <div class="section-title">背景エディター <small>模様を自由調整</small></div>
+          <div class="pro-grid3"><input type="color" id="patternColor1" value="#ffe4ef"><input type="color" id="patternColor2" value="#ffc7db"><button class="switch" id="patternColorResetBtn">色リセット</button></div>
+          <div class="control"><label>模様サイズ <output id="patternScaleOut">100%</output></label><input id="patternScale" type="range" min="40" max="220" value="100"></div>
+          <div class="control"><label>模様回転 <output id="patternRotateOut">0°</output></label><input id="patternRotate" type="range" min="-90" max="90" value="0"></div>
+          <div class="control"><label>模様透明度 <output id="patternOpacityOut">100%</output></label><input id="patternOpacity" type="range" min="10" max="100" value="100"></div>
+        </div>
+
+        <div class="section">
           <div class="section-title">明るい背景パターン <small>ピンク / ピンクゴールド / 緑 / 黄色</small></div>
           <div class="template-grid" id="patternGrid">
             <button class="template-card bg-pattern-card" data-pattern="pinkStripe" style="--tpl:repeating-linear-gradient(0deg,#ffd6e5 0 24px,#ffb8cf 24px 48px)">PINK STRIPE<small>明るい縞</small></button>
             <button class="template-card bg-pattern-card" data-pattern="pinkDiag" style="--tpl:repeating-linear-gradient(45deg,#ffd8e8 0 24px,#ffb7d0 24px 48px)">PINK DIAGONAL<small>斜め縞</small></button>
-            <button class="template-card bg-pattern-card" data-pattern="pinkDot" style="--tpl:radial-gradient(circle,#ffc4d8 20%,transparent 21%),#ffe4ee">PINK DOT<small>小さめ水玉</small></button>
+            <button class="template-card bg-pattern-card" data-pattern="pinkDot" style="--tpl:radial-gradient(circle at 50% 50%,#ffc4d8 0 4px,transparent 5px) 0 0/24px 24px,#ffe4ee">PINK DOT<small>小さめ水玉</small></button>
             <button class="template-card bg-pattern-card" data-pattern="pinkGoldStripe" style="--tpl:repeating-linear-gradient(0deg,#ffe7dc 0 24px,#f7d0c0 24px 48px)">PINK GOLD<small>縞</small></button>
             <button class="template-card bg-pattern-card" data-pattern="pinkGoldDiag" style="--tpl:repeating-linear-gradient(45deg,#ffefe7 0 24px,#ecc8ba 24px 48px)">PINK GOLD<small>斜め縞</small></button>
             <button class="template-card bg-pattern-card" data-pattern="greenStripe" style="--tpl:repeating-linear-gradient(0deg,#e1ffe4 0 24px,#c1f3c8 24px 48px)">GREEN STRIPE<small>明るい緑</small></button>
             <button class="template-card bg-pattern-card" data-pattern="greenDiag" style="--tpl:repeating-linear-gradient(45deg,#e5ffe8 0 24px,#c6f4cb 24px 48px)">GREEN DIAGONAL<small>斜め縞</small></button>
-            <button class="template-card bg-pattern-card" data-pattern="greenDot" style="--tpl:radial-gradient(circle,#bbefc0 20%,transparent 21%),#edfff0">GREEN DOT<small>小さめ水玉</small></button>
+            <button class="template-card bg-pattern-card" data-pattern="greenDot" style="--tpl:radial-gradient(circle at 50% 50%,#bbefc0 0 4px,transparent 5px) 0 0/24px 24px,#edfff0">GREEN DOT<small>小さめ水玉</small></button>
             <button class="template-card bg-pattern-card" data-pattern="yellowStripe" style="--tpl:repeating-linear-gradient(0deg,#fff8c9 0 24px,#ffe98f 24px 48px)">YELLOW STRIPE<small>明るい黄</small></button>
             <button class="template-card bg-pattern-card" data-pattern="yellowDiag" style="--tpl:repeating-linear-gradient(45deg,#fff9cf 0 24px,#ffec97 24px 48px)">YELLOW DIAGONAL<small>斜め縞</small></button>
-            <button class="template-card bg-pattern-card" data-pattern="yellowDot" style="--tpl:radial-gradient(circle,#ffe57f 20%,transparent 21%),#fffce3">YELLOW DOT<small>小さめ水玉</small></button>
+            <button class="template-card bg-pattern-card" data-pattern="yellowDot" style="--tpl:radial-gradient(circle at 50% 50%,#ffe57f 0 4px,transparent 5px) 0 0/24px 24px,#fffce3">YELLOW DOT<small>小さめ水玉</small></button>
             <button class="template-card bg-pattern-card" data-pattern="lavenderStripe" style="--tpl:repeating-linear-gradient(0deg,#f5ecff 0 20px,#dfc9ff 20px 40px)">LAVENDER<small>ラベンダー縞</small></button>
-            <button class="template-card bg-pattern-card" data-pattern="lavenderDot" style="--tpl:radial-gradient(circle,#dfc9ff 10%,transparent 11%),#faf4ff">LAVENDER DOT<small>小さめ水玉</small></button>
+            <button class="template-card bg-pattern-card" data-pattern="lavenderDot" style="--tpl:radial-gradient(circle at 50% 50%,#dfc9ff 0 4px,transparent 5px) 0 0/24px 24px,#faf4ff">LAVENDER DOT<small>小さめ水玉</small></button>
             <button class="template-card bg-pattern-card" data-pattern="skyStripe" style="--tpl:repeating-linear-gradient(0deg,#effaff 0 20px,#c9edff 20px 40px)">SKY STRIPE<small>水色ストライプ</small></button>
-            <button class="template-card bg-pattern-card" data-pattern="skyDot" style="--tpl:radial-gradient(circle,#bfe7fb 10%,transparent 11%),#f5fcff">SKY DOT<small>水色水玉</small></button>
+            <button class="template-card bg-pattern-card" data-pattern="skyDot" style="--tpl:radial-gradient(circle at 50% 50%,#bfe7fb 0 4px,transparent 5px) 0 0/24px 24px,#f5fcff">SKY DOT<small>水色水玉</small></button>
             <button class="template-card bg-pattern-card" data-pattern="peachDiag" style="--tpl:repeating-linear-gradient(45deg,#fff1e7 0 20px,#ffd1b6 20px 40px)">PEACH DIAG<small>ピーチ斜め縞</small></button>
-            <button class="template-card bg-pattern-card" data-pattern="peachDot" style="--tpl:radial-gradient(circle,#ffd4bc 10%,transparent 11%),#fff8f1">PEACH DOT<small>ピーチ水玉</small></button>
+            <button class="template-card bg-pattern-card" data-pattern="peachDot" style="--tpl:radial-gradient(circle at 50% 50%,#ffd4bc 0 4px,transparent 5px) 0 0/24px 24px,#fff8f1">PEACH DOT<small>ピーチ水玉</small></button>
             <button class="template-card bg-pattern-card" data-pattern="checkerPink" style="--tpl:conic-gradient(#ffcde0 25%,#fff0f6 0 50%,#ffcde0 0 75%,#fff0f6 0)">CHECKER<small>ピンク市松</small></button>
-            <button class="template-card bg-pattern-card" data-pattern="miniConfetti" style="--tpl:radial-gradient(circle,#ffb8d1 8%,transparent 9%),#fffaf4">CONFETTI<small>ミニドット</small></button>
+            <button class="template-card bg-pattern-card" data-pattern="miniConfetti" style="--tpl:radial-gradient(circle at 50% 50%,#ffb8d1 0 3px,transparent 4px) 0 0/20px 20px,#fffaf4">CONFETTI<small>ミニドット</small></button>
+
+            <button class="template-card bg-pattern-card" data-pattern="redStripe" style="--tpl:repeating-linear-gradient(0deg,#ffe5e5 0 20px,#ffb6b6 20px 40px)">RED STRIPE<small>赤ストライプ</small></button>
+            <button class="template-card bg-pattern-card" data-pattern="redDiag" style="--tpl:repeating-linear-gradient(45deg,#ffe9e9 0 20px,#ffb9b9 20px 40px)">RED DIAG<small>赤斜め縞</small></button>
+            <button class="template-card bg-pattern-card" data-pattern="redDot" style="--tpl:radial-gradient(circle at 50% 50%,#ffb1b1 0 4px,transparent 5px) 0 0/24px 24px,#fff2f2">RED DOT<small>赤水玉</small></button>
+            <button class="template-card bg-pattern-card" data-pattern="checkerPinkGold" style="--tpl:conic-gradient(#f2d0c1 25%,#fff1ea 0 50%,#f2d0c1 0 75%,#fff1ea 0)">PINK GOLD CHECKER<small>ピンクゴールド市松</small></button>
+            <button class="template-card bg-pattern-card" data-pattern="checkerGreen" style="--tpl:conic-gradient(#c7f1cc 25%,#ecfff0 0 50%,#c7f1cc 0 75%,#ecfff0 0)">GREEN CHECKER<small>緑市松</small></button>
+            <button class="template-card bg-pattern-card" data-pattern="checkerYellow" style="--tpl:conic-gradient(#ffe98f 25%,#fffde0 0 50%,#ffe98f 0 75%,#fffde0 0)">YELLOW CHECKER<small>黄市松</small></button>
+            <button class="template-card bg-pattern-card" data-pattern="checkerLavender" style="--tpl:conic-gradient(#dfc9ff 25%,#faf4ff 0 50%,#dfc9ff 0 75%,#faf4ff 0)">LAVENDER CHECKER<small>ラベンダー市松</small></button>
+            <button class="template-card bg-pattern-card" data-pattern="checkerSky" style="--tpl:conic-gradient(#c9edff 25%,#effaff 0 50%,#c9edff 0 75%,#effaff 0)">SKY CHECKER<small>水色市松</small></button>
+            <button class="template-card bg-pattern-card" data-pattern="checkerPeach" style="--tpl:conic-gradient(#ffd1b6 25%,#fff1e7 0 50%,#ffd1b6 0 75%,#fff1e7 0)">PEACH CHECKER<small>ピーチ市松</small></button>
+            <button class="template-card bg-pattern-card" data-pattern="checkerRed" style="--tpl:conic-gradient(#ffb9b9 25%,#fff0f0 0 50%,#ffb9b9 0 75%,#fff0f0 0)">RED CHECKER<small>赤市松</small></button>
             <button class="template-card bg-pattern-card" data-pattern="mintCandy" style="--tpl:repeating-linear-gradient(135deg,#e8fff1 0 22px,#cbf7db 22px 44px,#fff3b2 44px 66px)">MINT CANDY<small>ミント × レモン</small></button>
           </div>
         </div>
@@ -679,8 +794,19 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
           <div class="layerlist" id="textLayers" style="margin-top:8px"></div>
         </div>
         <div class="section">
+          <div class="section-title">日付入れ <small>選択後もフォント・色・影・縁を編集可能</small></div>
+          <div class="chips" id="dateTemplateChips"><button class="chip" data-date="dot">2026.10.06</button><button class="chip" data-date="slash">2026/10/06</button><button class="chip" data-date="editorial">OCT 06 2026</button><button class="chip" data-date="jp">2026年10月6日</button><button class="chip" data-date="short">10.06</button><button class="chip" data-date="month">OCTOBER 06</button></div>
+          <div class="pro-grid" style="margin-top:8px"><button class="switch" id="addDateBtn">＋ 今日の日付</button><button class="switch" id="refreshDateBtn">選択日付を更新</button></div>
+        </div>
+        <div class="section">
           <div class="section-title">文字スタイル</div>
           <select id="fontSelect"></select>
+          <div class="text-align-row">
+            <button class="switch" id="alignLeftBtn">左づめ</button>
+            <button class="switch on" id="alignCenterBtn">中央</button>
+            <button class="switch" id="alignRightBtn">右づめ</button>
+          </div>
+          <div class="pro-note">丸みのある文字スタイル「Rounded / 丸文字」を追加しました。左づめはブランド名・商品名・日付配置に使いやすいです。</div>
           <div class="control"><label>サイズ <output id="fontSizeOut">64</output></label><input id="fontSize" type="range" min="24" max="160" value="64"></div>
           <div class="control"><label>字間 <output id="letterSpacingOut">2</output></label><input id="letterSpacing" type="range" min="-2" max="18" value="2"></div>
           <div class="color-row">
@@ -692,6 +818,19 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
         </div>
       </div>
 
+        <div class="section">
+          <div class="section-title">文字PRO <small>縦書き・アーチ・縁・グラデーション</small></div>
+          <div class="pro-grid3"><button class="switch textModeBtn on" data-text-mode="normal">通常</button><button class="switch textModeBtn" data-text-mode="vertical">縦書き</button><button class="switch textModeBtn" data-text-mode="arc">アーチ</button><button class="switch textModeBtn" data-text-mode="circle">円形</button></div>
+          <div class="control"><label>行間 <output id="lineHeightOut">118%</output></label><input id="lineHeight" type="range" min="70" max="190" value="118"></div>
+          <div class="pro-grid"><select id="fontWeightSelect"><option value="400">Regular</option><option value="500">Medium</option><option value="700" selected>Bold</option><option value="800">Extra Bold</option></select><input class="textinput" id="highlightWord" placeholder="強調ワード"></div>
+          <div class="pro-grid3" style="margin-top:8px"><button class="switch" id="outlineTextBtn">縁 OFF</button><input type="color" id="outlineTextColor" value="#111111"><input id="outlineTextWidth" type="range" min="1" max="16" value="4"></div>
+          <div class="pro-grid3" style="margin-top:8px"><button class="switch" id="gradientTextBtn">グラデ OFF</button><input type="color" id="gradientText1" value="#ffffff"><input type="color" id="gradientText2" value="#ff2776"></div>
+          <div class="pro-grid" style="margin-top:8px"><input type="color" id="highlightColor" value="#ff2776"><div class="product-preview-chip">左: 強調色 / 右: 強調ワード</div></div>
+          <div class="control"><label>アーチ強度 <output id="arcAmountOut">45°</output></label><input id="arcAmount" type="range" min="-150" max="150" value="45"></div>
+          <div class="pro-grid3"><input type="color" id="plateColor" value="#ffffff"><input id="plateOpacity" type="range" min="10" max="100" value="70"><div class="product-preview-chip">文字背景 色 / 透明度</div></div>
+          <div class="section-title" style="margin-top:10px">文字エフェクトプリセット</div><div class="pro-grid3" id="textFxPresets"><button class="switch" data-textfx="metal">METAL</button><button class="switch" data-textfx="embroidery">刺繍</button><button class="switch" data-textfx="sticker">STICKER</button><button class="switch" data-textfx="hand">手書き</button><button class="switch" data-textfx="puffy">ぷっくり</button><button class="switch" data-textfx="typewriter">TYPE</button></div>
+          <div class="section-title" style="margin-top:10px">AI文字位置候補</div><div class="pro-grid3"><button class="switch textPosSuggest" data-pos="0">候補1</button><button class="switch textPosSuggest" data-pos="1">候補2</button><button class="switch textPosSuggest" data-pos="2">候補3</button></div>
+        </div>
       <div class="panel" data-panel="frame">
         <div class="section">
           <div class="section-title">枠デザイン <small>写真の上に重ねます</small></div>
@@ -747,6 +886,16 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
           <div class="layerlist" id="logoLayers" style="margin-top:10px"></div>
         </div>
         <div class="section">
+          <div class="section-title">デザインスタンプ <small>ブランド投稿向け</small></div>
+          <div class="stamp-bank" id="designStampBank">
+            <button data-stamp="sparkle">SPARKLE</button><button data-stamp="star">STAR</button><button data-stamp="heart">HEART</button><button data-stamp="flower">FLOWER</button><button data-stamp="ribbon">RIBBON</button><button data-stamp="arrow">ARROW</button><button data-stamp="tag">PRICE TAG</button><button data-stamp="thread">THREAD</button><button data-stamp="button">BUTTON</button><button data-stamp="hanger">HANGER</button><button data-stamp="pin">PIN</button><button data-stamp="bubble">BUBBLE</button><button data-stamp="new">NEW</button><button data-stamp="limited">LIMITED</button><button data-stamp="handmade">HANDMADE</button><button data-stamp="original">ORIGINAL</button>
+          </div>
+          <div class="pro-grid3" style="margin-top:8px"><button class="switch" id="deleteStampBtn">選択削除</button><input type="color" id="designStampColor" value="#ff8fb8"><input id="designStampSize" type="range" min="40" max="320" value="120"></div>
+          <div class="pro-grid" style="margin-top:8px"><input id="designStampRotate" type="range" min="-180" max="180" value="0"><input id="designStampOpacity" type="range" min="10" max="100" value="100"></div>
+          <div class="layerlist" id="designStampLayers" style="margin-top:8px"></div>
+        </div>
+
+        <div class="section">
           <div class="section-title">選択中ロゴの編集</div>
           <div class="switchrow">
             <button class="switch on" id="logoToggle">表示 ON</button>
@@ -769,10 +918,8 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
       <div class="panel" data-panel="export">
         <div class="export-card">
           <div class="section-title">PNG書き出し <small>正方形・高品質</small></div>
-          <select id="exportSize" style="margin-bottom:8px">
-            <option value="1080">1080 × 1080 / Instagram標準</option>
-            <option value="2160">2160 × 2160 / 2× High Resolution</option>
-          </select>
+          <select id="exportFormat" style="margin-bottom:8px"><option value="square">1:1 投稿</option><option value="feed45">4:5 フィード</option><option value="story916">9:16 ストーリー / Reelカバー</option></select>
+          <select id="exportSize" style="margin-bottom:8px"><option value="1080">標準解像度</option><option value="2160">2× High Resolution</option></select>
           <button class="export-main" id="exportBtn">PNGを保存</button>
           <div class="export-secondary">
             <button class="switch" id="savePhotoBtn">写真アプリへ</button>
@@ -783,7 +930,16 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
             <button class="switch" id="saveProjectBtn">プロジェクト保存</button>
             <button class="switch" id="loadProjectBtn">前回を復元</button>
           </div>
-          <div class="note">1080または2160pxの正方形PNG。Instagram向けに、文字とロゴは安全域を意識して配置できます。編集は非破壊で、衣装やアクセサリーそのものの形を生成変更しません。プロジェクト保存はこの端末のブラウザ内に保存します。</div>
+          <div class="section" style="margin-top:10px">
+            <div class="section-title">Instagramプレビュー</div><div class="pro-grid"><button class="switch" id="showGridPreviewBtn">3×3グリッド確認</button><button class="switch" id="showCompleteBtn">完成画面</button></div>
+          </div>
+          <div class="section">
+            <div class="section-title">A/B比較</div><div class="pro-grid3"><button class="switch" id="saveABtn">A保存</button><button class="switch" id="showABtn">A表示</button><button class="switch" id="saveBBtn">B保存</button><button class="switch" id="showBBtn">B表示</button><button class="switch" id="restoreCurrentBtn">現在へ</button><button class="switch" id="showABCompareBtn">A/B左右比較</button></div>
+          </div>
+          <div class="section">
+            <div class="section-title">自動保存・履歴</div><div class="pro-grid"><button class="switch on" id="autosaveBtn">自動保存 ON</button><button class="switch" id="clearHistoryBtn">履歴クリア</button></div><div class="history-list" id="historyList" style="margin-top:8px"></div>
+          </div>
+          <div class="note">1:1 / 4:5 / 9:16 PNGに対応。Instagram投稿・縦フィード・ストーリー/Reelカバーを同じ編集から書き出せます。編集は非破壊です。</div>
         </div>
       </div>
     </section>
@@ -797,18 +953,21 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
   <button class="tab" data-tab="bg"><span class="i">◌</span>背景</button>
   <button class="tab" data-tab="text"><span class="i">T</span>文字</button>
   <button class="tab" data-tab="frame"><span class="i">▣</span>枠</button>
-  <button class="tab" data-tab="stamp"><span class="i">◎</span>ロゴ</button>
+  <button class="tab" data-tab="stamp"><span class="i">◎</span>素材</button>
   <button class="tab" data-tab="export"><span class="i">⇩</span>保存</button>
 </nav>
 
 <div class="modal" id="actualModal">
-  <div class="modal-head"><b>実寸確認：1080 × 1080 px</b><button class="mini" id="closeActual">閉じる</button></div>
+  <div class="modal-head"><b>実寸確認 / 出力プレビュー</b><button class="mini" id="closeActual">閉じる</button></div>
   <div class="modal-scroll"><img id="actualImage" alt="Actual size preview"></div>
 </div>
+<div class="modal" id="igGridModal"><div class="modal-head"><b>Instagram 3×3 グリッドプレビュー</b><button class="mini" id="closeIgGrid">閉じる</button></div><div class="modal-scroll"><div class="ig-grid-preview" id="igGridPreview"></div><div class="note" style="margin-top:10px">中央が今回の投稿です。プロフィール一覧で文字が小さすぎないか確認できます。</div></div></div>
+<div class="modal" id="completeModal"><div class="complete-modal-card"><h2>完成！</h2><p>Instagram投稿用画像ができました。保存・共有・別サイズ出力をここから行えます。</p><div class="complete-actions"><button class="export-main" id="completeSaveBtn">写真アプリへ</button><button class="switch" id="completeShareBtn">共有</button><button class="switch" id="completeSquareBtn">1:1</button><button class="switch" id="completeFeedBtn">4:5</button><button class="switch" id="completeStoryBtn">9:16</button><button class="switch" id="completeCloseBtn">編集へ戻る</button></div></div></div>
+<div class="modal" id="abCompareModal"><div class="modal-head"><b>A/B 左右比較</b><button class="mini" id="closeABCompare">閉じる</button></div><div class="modal-scroll"><div class="pro-grid"><div><div class="note">A</div><img id="abCompareA" style="width:100%;border-radius:14px"></div><div><div class="note">B</div><img id="abCompareB" style="width:100%;border-radius:14px"></div></div></div></div>
 <div class="toast" id="toast"></div>
 
 <script>
-/* KoKoRoの写真館 GitHub READY DELUXE v5 - classic logo restored / extra patterns / square decoration removed */
+/* KoKoRoの写真館 GITHUB DELUXE v8.1 - text selection guide removed / clean export */
 (() => {
   "use strict";
   const $ = s => document.querySelector(s);
@@ -840,6 +999,8 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
     ["Pacifico","Pacifico"],
     ["Caveat","Caveat"],
     ["Zen Kurenaido","Zen Kurenaido"],
+    ["Rounded / 丸文字","M PLUS Rounded 1c"],
+    ["Typewriter","Courier New"],
     ["Georgia","Georgia"],
     ["Impact","Impact"]
   ];
@@ -866,11 +1027,20 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
     photoAspect:1,
     selectedPhotoIndex:0,
     slotUploadIndex:0,
+    photoEdits:Array.from({length:6},()=>({zoom:1,x:0,y:0,b:100,c:100,s:100,g:0,round:18,shadow:false,hidden:false,locked:false,title:"",titleVisible:true,border:false,borderColor:"#ffffff",borderWidth:4})),
     multiMode:"single",
+    collageGap:18,
+    collageRound:18,
     photoTitle:"",
     photoTitleVisible:true,
     photoTitleStyle:"paper",
     bgPatternPreset:"pinkStripe",
+    patternScale:100,
+    patternRotate:0,
+    patternOpacity:1,
+    patternColor1:"#ffe4ef",
+    patternColor2:"#ffc7db",
+    patternCustomColors:false,
     currentTemplate:"",
     layout:"auto",
     mood:"fashion",
@@ -884,12 +1054,15 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
     shiftY:0,
     texts:[],
     selectedText:-1,
+    selectedLayer:{type:"photo",index:0},
     activeLayer:"photo",
     selectedLogoIndex:0,
     logos:[{source:"classic",visible:true,x:930,y:930,size:.22,opacity:1,locked:false}],
     logo:{source:"classic",visible:true,x:930,y:930,size:.22,opacity:1,locked:false},
+    designStamps:[],
+    selectedStampIndex:-1,
     bgVariant:0,
-    bgMode:"design",
+    bgMode:"backImage",
     bgStrength:.70,
     framePadding:0,
     frameOpacity:1,
@@ -899,6 +1072,12 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
     customGradient:["#ffd6e5","#fff0a8"],
     fx:{grain:false,vignette:false,glow:false,grid:false,dots:false,edgeBars:false,strength:.35},
     analysis:{orientation:"未解析",brightness:0,detail:0,zone:"--",zoneKey:"center",faces:0},
+    productCard:{visible:false,name:"",price:"",color:"",size:"",status:"NEW",style:"paper",position:"br",locked:false},
+    exportFormat:"square",
+    compareA:null,
+    compareB:null,
+    compareCurrent:null,
+    autosave:true,
     showGuides:false,
     snapX:null,
     snapY:null,
@@ -930,6 +1109,7 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
     state.logos.push(logo);
     state.selectedLogoIndex=state.logos.length-1;
     state.logo=logo;
+    state.selectedLayer={type:"logo",index:state.selectedLogoIndex};
     state.activeLayer="logo";
     renderLogoLayers(); syncLogoControls(); render(); recordHistory();
     toast(`${source==="icon"?"icon.png":"既存ロゴ"} を追加しました`);
@@ -947,7 +1127,7 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
       state.selectedLogoIndex=0;
       state.logo={source:"classic",visible:false,x:540,y:540,size:.22,opacity:1,locked:false};
     }
-    renderLogoLayers(); syncLogoControls(); render(); recordHistory();
+    renderLogoLayers(); syncLogoControls(); renderLayerManager(); render(); recordHistory("ロゴ削除");
     toast("選択中のロゴを削除しました");
   }
 
@@ -955,7 +1135,7 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
     state.logos=[];
     state.selectedLogoIndex=0;
     state.logo={source:"classic",visible:false,x:540,y:540,size:.22,opacity:1,locked:false};
-    renderLogoLayers(); syncLogoControls(); render(); recordHistory();
+    renderLogoLayers(); syncLogoControls(); renderLayerManager(); render(); recordHistory("ロゴ全削除");
     toast("ロゴをすべて削除しました");
   }
 
@@ -1091,42 +1271,40 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
       skyDot:{base:"#f5fcff",alt:"#bfe7fb",type:"dot"},
       peachDiag:{base:"#fff1e7",alt:"#ffd1b6",type:"diag"},
       peachDot:{base:"#fff8f1",alt:"#ffd4bc",type:"dot"},
+      redStripe:{base:"#fff0f0",alt:"#ffbcbc",type:"hstripe"},
+      redDiag:{base:"#fff0f0",alt:"#ffbcbc",type:"diag"},
+      redDot:{base:"#fff6f6",alt:"#ffb1b1",type:"dot"},
       checkerPink:{base:"#fff0f6",alt:"#ffcde0",type:"checker"},
+      checkerPinkGold:{base:"#fff1ea",alt:"#f2d0c1",type:"checker"},
+      checkerGreen:{base:"#ecfff0",alt:"#c7f1cc",type:"checker"},
+      checkerYellow:{base:"#fffde0",alt:"#ffe98f",type:"checker"},
+      checkerLavender:{base:"#faf4ff",alt:"#dfc9ff",type:"checker"},
+      checkerSky:{base:"#effaff",alt:"#c9edff",type:"checker"},
+      checkerPeach:{base:"#fff1e7",alt:"#ffd1b6",type:"checker"},
+      checkerRed:{base:"#fff0f0",alt:"#ffb9b9",type:"checker"},
       miniConfetti:{base:"#fffaf4",alt:"#ffb8d1",alt2:"#bfeec8",type:"confetti"},
       mintCandy:{base:"#f3fff8",alt:"#ccf4da",alt2:"#fff0a8",type:"mix"}
     }[name] || {base:"#ffe4ef",alt:"#ffc7db",type:"hstripe"};
   }
 
   function drawPatternBackground(){
-    const spec=patternSpec(state.bgPatternPreset);
-    ctx.fillStyle=spec.base;ctx.fillRect(0,0,1080,1080);
-    ctx.save();
+    const spec=patternSpec(state.bgPatternPreset),scale=Math.max(.4,(state.patternScale||100)/100),opacity=Math.max(.1,state.patternOpacity??1);
+    const base=state.patternCustomColors?(state.patternColor1||spec.base):spec.base, alt=state.patternCustomColors?(state.patternColor2||spec.alt):spec.alt;
+    ctx.fillStyle=base;ctx.fillRect(0,0,1080,1080);ctx.save();ctx.globalAlpha=opacity;
+    ctx.translate(540,540);ctx.rotate((state.patternRotate||0)*Math.PI/180);ctx.translate(-540,-540);
     if(spec.type==="hstripe"){
-      for(let y=0;y<1080;y+=56){ ctx.fillStyle=spec.alt; ctx.fillRect(0,y,1080,28); }
+      const step=56*scale,thick=28*scale;ctx.fillStyle=alt;for(let y=-1080;y<2160;y+=step)ctx.fillRect(-1080,y,3240,thick);
     }else if(spec.type==="diag"){
-      ctx.strokeStyle=spec.alt; ctx.lineWidth=28;
-      for(let x=-1080;x<2160;x+=70){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x+1080,1080); ctx.stroke(); }
+      const step=70*scale;ctx.strokeStyle=alt;ctx.lineWidth=28*scale;for(let x=-2160;x<2160;x+=step){ctx.beginPath();ctx.moveTo(x,-1080);ctx.lineTo(x+2160,2160);ctx.stroke();}
     }else if(spec.type==="dot"){
-      ctx.fillStyle=spec.alt;
-      for(let y=60;y<1080;y+=150){
-        for(let x=60;x<1080;x+=150){ ctx.beginPath(); ctx.arc(x,y,18,0,Math.PI*2); ctx.fill(); }
-      }
+      const step=120*scale,radius=16*scale,cols=Math.ceil(1080/step)+6,rows=cols,startX=540-Math.floor(cols/2)*step,startY=540-Math.floor(rows/2)*step;ctx.fillStyle=alt;
+      for(let row=0;row<rows;row++)for(let col=0;col<cols;col++){ctx.beginPath();ctx.arc(startX+col*step,startY+row*step,radius,0,Math.PI*2);ctx.fill();}
     }else if(spec.type==="checker"){
-      const sz=70;
-      for(let y=0;y<1080;y+=sz) for(let x=0;x<1080;x+=sz)
-        if(((x/sz)+(y/sz))%2===0){ctx.fillStyle=spec.alt;ctx.fillRect(x,y,sz,sz);}
+      const sz=70*scale;for(let y=-1080;y<2160;y+=sz)for(let x=-1080;x<2160;x+=sz)if(((Math.round(x/sz)+Math.round(y/sz))&1)===0){ctx.fillStyle=alt;ctx.fillRect(x,y,sz,sz);}
     }else if(spec.type==="confetti"){
-      const colors=[spec.alt,spec.alt2||"#fff0a8","#b8e4ff","#ffe68d"];
-      for(let y=55;y<1080;y+=110) for(let x=55;x<1080;x+=110){
-        ctx.fillStyle=colors[((x+y)/110)%colors.length|0];
-        ctx.beginPath();ctx.arc(x,y,7,0,Math.PI*2);ctx.fill();
-      }
+      const step=110*scale,colors=[alt,spec.alt2||"#fff0a8","#b8e4ff","#ffe68d"];for(let y=-540,row=0;y<1620;y+=step,row++)for(let x=-540,col=0;x<1620;x+=step,col++){ctx.fillStyle=colors[(row+col)%colors.length];ctx.beginPath();ctx.arc(x,y,7*scale,0,Math.PI*2);ctx.fill();}
     }else if(spec.type==="mix"){
-      for(let y=0;y<1080;y+=62){ ctx.fillStyle=spec.alt; ctx.fillRect(0,y,1080,30); }
-      ctx.fillStyle=spec.alt2||"#fff0a8";
-      for(let y=80;y<1080;y+=180){
-        for(let x=90;x<1080;x+=180){ ctx.beginPath(); ctx.arc(x,y,26,0,Math.PI*2); ctx.fill(); }
-      }
+      const step=62*scale;ctx.fillStyle=alt;for(let y=-1080;y<2160;y+=step)ctx.fillRect(-1080,y,3240,30*scale);ctx.fillStyle=spec.alt2||"#fff0a8";for(let y=-540;y<1620;y+=180*scale)for(let x=-540;x<1620;x+=180*scale){ctx.beginPath();ctx.arc(x,y,26*scale,0,Math.PI*2);ctx.fill();}
     }
     ctx.restore();
   }
@@ -1252,35 +1430,60 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
   function getPhotoRects(){
     if(state.multiMode==="single") return [photoRect()];
     const a=contentAreaForPhotos();
+    const gap=Math.max(0,state.collageGap||18), rr=Math.max(0,state.collageRound||18);
     if(state.multiMode==="row2"){
-      const gap=24,w=(a.w-gap)/2,h=a.h*.84,y=a.y+(a.h-h)/2;
-      return [
-        {x:a.x,y,w,h,r:20},
-        {x:a.x+w+gap,y,w,h,r:20}
-      ];
+      const w=(a.w-gap)/2,h=a.h*.84,y=a.y+(a.h-h)/2;
+      return [{x:a.x,y,w,h,r:rr},{x:a.x+w+gap,y,w,h,r:rr}];
     }
     if(state.multiMode==="corner2"){
-      const size=Math.min(a.w,a.h)*.52,gap=20;
+      const size=Math.min(a.w,a.h)*.52;
+      return [{x:a.x,y:a.y,w:size,h:size,r:rr},{x:a.x+a.w-size,y:a.y+a.h-size,w:size,h:size,r:rr}];
+    }
+    if(state.multiMode==="grid4"){
+      const w=(a.w-gap)/2,h=(a.h-gap)/2;
       return [
-        {x:a.x,y:a.y,w:size,h:size,r:22},
-        {x:a.x+a.w-size,y:a.y+a.h-size,w:size,h:size,r:22}
+        {x:a.x,y:a.y,w,h,r:rr},{x:a.x+w+gap,y:a.y,w,h,r:rr},
+        {x:a.x,y:a.y+h+gap,w,h,r:rr},{x:a.x+w+gap,y:a.y+h+gap,w,h,r:rr}
+      ];
+    }
+    if(state.multiMode==="bigLeft"){
+      const leftW=a.w*.60, rightW=a.w-leftW-gap, rightH=(a.h-gap)/2;
+      return [
+        {x:a.x,y:a.y,w:leftW,h:a.h,r:rr},
+        {x:a.x+leftW+gap,y:a.y,w:rightW,h:rightH,r:rr},
+        {x:a.x+leftW+gap,y:a.y+rightH+gap,w:rightW,h:rightH,r:rr}
+      ];
+    }
+    if(state.multiMode==="bigTop3"){
+      const topH=a.h*.58,bottomH=a.h-topH-gap,w=(a.w-gap*2)/3;
+      return [
+        {x:a.x,y:a.y,w:a.w,h:topH,r:rr},
+        {x:a.x,y:a.y+topH+gap,w,h:bottomH,r:rr},
+        {x:a.x+w+gap,y:a.y+topH+gap,w,h:bottomH,r:rr},
+        {x:a.x+(w+gap)*2,y:a.y+topH+gap,w,h:bottomH,r:rr}
+      ];
+    }
+    if(state.multiMode==="polaroid"){
+      const w=a.w*.46,h=a.h*.58;
+      return [
+        {x:a.x+a.w*.05,y:a.y+a.h*.08,w,h,r:Math.min(8,rr)},
+        {x:a.x+a.w*.49,y:a.y+a.h*.28,w,h,r:Math.min(8,rr)},
+        {x:a.x+a.w*.25,y:a.y+a.h*.42,w,h,r:Math.min(8,rr)}
       ];
     }
     if(state.multiMode==="grid6"){
-      const cols=3,rows=2,gx=18,gy=18;
-      const w=(a.w-gx*(cols-1))/cols,h=(a.h-gy*(rows-1))/rows;
-      const arr=[];
-      for(let r=0;r<rows;r++) for(let c=0;c<cols;c++){
-        arr.push({x:a.x+c*(w+gx),y:a.y+r*(h+gy),w,h,r:18});
-      }
+      const cols=3,rows=2,w=(a.w-gap*(cols-1))/cols,h=(a.h-gap*(rows-1))/rows,arr=[];
+      for(let row=0;row<rows;row++) for(let col=0;col<cols;col++) arr.push({x:a.x+col*(w+gap),y:a.y+row*(h+gap),w,h,r:rr});
       return arr;
     }
     return [photoRect()];
   }
 
   function drawPhotoSlotTitle(rect, index){
-    if(!state.photoTitleVisible || !state.photoTitle.trim()) return;
-    const title = state.multiMode==="single" ? state.photoTitle : `${state.photoTitle}`;
+    const edit=state.photoEdits?.[index]||{};
+    const localTitle=(edit.title||"").trim();
+    const title=(localTitle||state.photoTitle||"").trim();
+    if(edit.titleVisible===false || !state.photoTitleVisible || !title) return;
     const style = state.photoTitleStyle || "paper";
     const barW = Math.min(rect.w*0.86, 440);
     const barH = Math.max(40, Math.min(76, rect.h*0.18));
@@ -1402,6 +1605,7 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
       if(!state.photos) state.photos=[]; if(!state.photoDataURLs) state.photoDataURLs=[];
       state.photos[slotIndex] = img;
       state.photoDataURLs[slotIndex] = dataURL;
+      ensurePhotoEdits();state.photoEdits[slotIndex]={zoom:1,x:0,y:0,b:100,c:100,s:100,g:0,round:18,shadow:false,hidden:false,locked:false,title:"",titleVisible:true,border:false,borderColor:"#ffffff",borderWidth:4};
       if(!state.photoName) state.photoName = file.name;
       if(!state.photo || state.selectedPhotoIndex===slotIndex || state.photos.filter(Boolean).length===1){
         state.selectedPhotoIndex = slotIndex;
@@ -1428,16 +1632,17 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
     if(!state.photos[idx]) return;
     state.photos.splice(idx,1);
     state.photoDataURLs.splice(idx,1);
+    ensurePhotoEdits();state.photoEdits.splice(idx,1);state.photoEdits.push({zoom:1,x:0,y:0,b:100,c:100,s:100,g:0,round:18,shadow:false,hidden:false,locked:false,title:"",titleVisible:true,border:false,borderColor:"#ffffff",borderWidth:4});
     if(state.selectedPhotoIndex >= state.photos.length) state.selectedPhotoIndex = Math.max(0, state.photos.length-1);
     refreshPrimaryPhoto();
-    syncOutputs(); render(); recordHistory();
+    syncOutputs(); renderLayerManager(); render(); recordHistory("写真削除");
     toast(`SLOT ${idx+1} を消去しました`);
   }
 
   function clearAllPhotos(){
-    state.photos=[]; state.photoDataURLs=[]; state.selectedPhotoIndex=0;
+    state.photos=[]; state.photoDataURLs=[]; state.selectedPhotoIndex=0;state.photoEdits=Array.from({length:6},()=>({zoom:1,x:0,y:0,b:100,c:100,s:100,g:0,round:18,shadow:false,hidden:false,locked:false,title:"",titleVisible:true,border:false,borderColor:"#ffffff",borderWidth:4}));
     refreshPrimaryPhoto();
-    syncOutputs(); render(); recordHistory();
+    syncOutputs(); renderLayerManager(); render(); recordHistory("写真全削除");
     toast("写真をすべて消去しました");
   }
 
@@ -1453,45 +1658,48 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
     return `brightness(${f.b}%) contrast(${f.c}%) saturate(${f.s}%) grayscale(${f.g}%) sepia(${sep}%) hue-rotate(${hue}deg)`;
   }
 
+  function ensurePhotoEdits(){
+    if(!Array.isArray(state.photoEdits)) state.photoEdits=[];
+    while(state.photoEdits.length<6) state.photoEdits.push({zoom:1,x:0,y:0,b:100,c:100,s:100,g:0,round:18,shadow:false,hidden:false,locked:false,title:"",titleVisible:true,border:false,borderColor:"#ffffff",borderWidth:4});
+    state.photoEdits=state.photoEdits.map(e=>({zoom:1,x:0,y:0,b:100,c:100,s:100,g:0,round:18,shadow:false,hidden:false,locked:false,title:"",titleVisible:true,border:false,borderColor:"#ffffff",borderWidth:4,...e}));
+  }
+
+  function selectedPhotoEdit(){ensurePhotoEdits();return state.photoEdits[state.selectedPhotoIndex||0] || state.photoEdits[0]}
+
   function drawPhoto(){
     if(!state.photo)return;
-
-    const imgs = (state.photos && state.photos.length ? state.photos : [state.photo]);
-    const rects = getPhotoRects();
-
-    rects.forEach((r, idx)=>{
-      const im = imgs[idx % imgs.length] || state.photo;
-      ctx.save(); roundedRectPath(r.x,r.y,r.w,r.h,r.r); ctx.clip();
-
-      const containScale=Math.min(r.w/im.naturalWidth,r.h/im.naturalHeight);
-      const coverScale=Math.max(r.w/im.naturalWidth,r.h/im.naturalHeight);
-      const base=state.fitMode==="cover" ? coverScale : containScale;
-      const sc=base*state.zoom;
-      const dw=im.naturalWidth*sc, dh=im.naturalHeight*sc;
-      const dx=r.x+(r.w-dw)/2+state.shiftX;
-      const dy=r.y+(r.h-dh)/2+state.shiftY;
-
-      ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality="high";ctx.filter=photoFilter();
-      ctx.drawImage(im,dx,dy,dw,dh);ctx.filter="none";
-      ctx.restore();
-
+    ensurePhotoEdits();
+    const imgs=(state.photos&&state.photos.length?state.photos:[state.photo]);
+    const rects=getPhotoRects();
+    rects.forEach((r,idx)=>{
+      const imgIndex=idx%imgs.length, im=imgs[imgIndex]||state.photo, edit=state.photoEdits[imgIndex]||selectedPhotoEdit();
+      if(edit.hidden) return;
+      const rr={...r,r:Math.max(0,edit.round??r.r??0)};
+      ctx.save();
+      if(edit.shadow){ctx.shadowColor="rgba(0,0,0,.28)";ctx.shadowBlur=24;ctx.shadowOffsetY=10;}
+      roundedRectPath(rr.x,rr.y,rr.w,rr.h,rr.r);ctx.clip();
+      const containScale=Math.min(rr.w/im.naturalWidth,rr.h/im.naturalHeight);
+      const coverScale=Math.max(rr.w/im.naturalWidth,rr.h/im.naturalHeight);
+      const base=state.fitMode==="cover"?coverScale:containScale;
+      const sc=base*(state.zoom||1)*(edit.zoom||1),dw=im.naturalWidth*sc,dh=im.naturalHeight*sc;
+      const dx=rr.x+(rr.w-dw)/2+(state.shiftX||0)+(edit.x||0),dy=rr.y+(rr.h-dh)/2+(state.shiftY||0)+(edit.y||0);
+      const f=state.f;
+      const brightness=(f.b||100)*(edit.b||100)/100, contrast=(f.c||100)*(edit.c||100)/100, saturation=(f.s||100)*(edit.s||100)/100;
+      const sep=Math.max(0,(f.sep||0)+Math.abs(f.w||0)*.12),hue=(f.h||0);
+      ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality="high";
+      ctx.filter=`brightness(${brightness}%) contrast(${contrast}%) saturate(${saturation}%) grayscale(${edit.g||f.g||0}%) sepia(${sep}%) hue-rotate(${hue}deg)`;
+      ctx.drawImage(im,dx,dy,dw,dh);ctx.filter="none";ctx.restore();
       if(state.multiMode!=="single"){
-        ctx.save();
-        ctx.strokeStyle="rgba(255,255,255,.72)";
-        ctx.lineWidth=4;
-        roundedRectPath(r.x,r.y,r.w,r.h,r.r); ctx.stroke();
-        ctx.restore();
+        ctx.save();ctx.strokeStyle="rgba(255,255,255,.72)";ctx.lineWidth=4;roundedRectPath(rr.x,rr.y,rr.w,rr.h,rr.r);ctx.stroke();ctx.restore();
       }
-      drawPhotoSlotTitle(r, idx);
+      if(edit.border){ctx.save();ctx.strokeStyle=edit.borderColor||"#ffffff";ctx.lineWidth=Math.max(1,edit.borderWidth||4);roundedRectPath(rr.x+(edit.borderWidth||4)/2,rr.y+(edit.borderWidth||4)/2,rr.w-(edit.borderWidth||4),rr.h-(edit.borderWidth||4),Math.max(0,rr.r-(edit.borderWidth||4)/2));ctx.stroke();ctx.restore();}
+      drawPhotoSlotTitle(rr,idx);
     });
-
-    const l=resolvedLayout(), r=photoRect();
-    if(state.multiMode==="single" && (l==="left"||l==="right")){
-      ctx.save();ctx.strokeStyle="rgba(255,255,255,.28)";ctx.lineWidth=2;
-      const edge=l==="left" ? r.x+r.w : r.x;
-      ctx.beginPath();ctx.moveTo(edge,60);ctx.lineTo(edge,1020);ctx.stroke();ctx.restore();
+    const l=resolvedLayout(),r=photoRect();
+    if(state.multiMode==="single"&&(l==="left"||l==="right")){
+      ctx.save();ctx.strokeStyle="rgba(255,255,255,.28)";ctx.lineWidth=2;const edge=l==="left"?r.x+r.w:r.x;ctx.beginPath();ctx.moveTo(edge,60);ctx.lineTo(edge,1020);ctx.stroke();ctx.restore();
     }
-    if(state.multiMode==="single" && l==="card"){
+    if(state.multiMode==="single"&&l==="card"){
       ctx.save();ctx.shadowColor="rgba(0,0,0,.18)";ctx.shadowBlur=24;ctx.strokeStyle="rgba(255,255,255,.72)";ctx.lineWidth=12;roundedRectPath(r.x,r.y,r.w,r.h,r.r);ctx.stroke();ctx.restore();
     }
   }
@@ -1508,29 +1716,38 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
     }
   }
 
+  function textFillFor(t,maxW,totalH){
+    if(!t.gradient) return t.color||"#ffffff";
+    const g=ctx.createLinearGradient(-maxW/2,-totalH/2,maxW/2,totalH/2);g.addColorStop(0,t.grad1||"#ffffff");g.addColorStop(1,t.grad2||"#ff2776");return g;
+  }
+  function drawStyledSpacedText(line,x,y,t,align="center"){
+    const spacing=t.spacing||0,w=textWidthSpaced(line,spacing);let sx=x;if(align==="center")sx=x-w/2;if(align==="right")sx=x-w;
+    const highlight=t.highlightWord||"",hiStart=highlight?line.indexOf(highlight):-1,hiEnd=hiStart>=0?hiStart+highlight.length:-1;
+    for(let i=0;i<line.length;i++){
+      const ch=line[i],isHi=hiStart>=0&&i>=hiStart&&i<hiEnd;
+      if(t.outline){ctx.strokeStyle=t.outlineColor||"#111111";ctx.lineWidth=Math.max(1,t.outlineWidth||4);ctx.strokeText(ch,sx,y)}
+      ctx.fillStyle=isHi?(t.highlightColor||"#ff2776"):textFillFor(t,w,t.size*1.2);ctx.fillText(ch,sx,y);sx+=ctx.measureText(ch).width+spacing;
+    }
+  }
   function drawTexts(){
     state.texts.forEach((t,idx)=>{
-      if(!t.text.trim())return;
-      ctx.save();ctx.translate(t.x,t.y);ctx.rotate(t.rotate*Math.PI/180);
-      ctx.font=`${t.weight} ${t.size}px "${t.font}"`;ctx.textBaseline="middle";
+      if(t.visible===false || !t.text || !t.text.trim())return;
+      if(!t.align)t.align="center";if(!t.mode)t.mode="normal";if(!t.lineHeight)t.lineHeight=1.18;
+      ctx.save();ctx.translate(t.x,t.y);ctx.rotate((t.rotate||0)*Math.PI/180);ctx.font=`${t.weight||700} ${t.size}px "${t.font}"`;ctx.textBaseline="middle";
       if(t.shadow){ctx.shadowColor="rgba(0,0,0,.48)";ctx.shadowBlur=18;ctx.shadowOffsetY=7}
-      const lines=t.text.split(/\n/).slice(0,4), lineH=t.size*1.18;
-      const widths=lines.map(line=>textWidthSpaced(line,t.spacing));
-      const maxW=Math.max(...widths,40), totalH=lineH*lines.length;
-      if(t.plate){
-        ctx.shadowColor="transparent";ctx.fillStyle=t.plateColor||"rgba(0,0,0,.72)";
-        roundedRectPath(-maxW/2-24,-totalH/2-18,maxW+48,totalH+36,18);ctx.fill();
-        if(t.shadow){ctx.shadowColor="rgba(0,0,0,.38)";ctx.shadowBlur=14;ctx.shadowOffsetY=6}
-      }
-      ctx.fillStyle=t.color;ctx.strokeStyle="rgba(0,0,0,.23)";ctx.lineWidth=Math.max(1,t.size*.018);
-      lines.forEach((line,i)=>{
-        const yy=(i-(lines.length-1)/2)*lineH;
-        if(state.mood==="cartoon"||state.mood==="pop"){ctx.shadowColor="transparent";ctx.lineWidth=Math.max(3,t.size*.045);drawSpacedText(line,0,yy,t.spacing,"center",true)}
-        drawSpacedText(line,0,yy,t.spacing,"center",false);
-      });
-      if(idx===state.selectedText && state.activeLayer==="text"){
-        ctx.shadowColor="transparent";ctx.strokeStyle="rgba(84,229,255,.95)";ctx.lineWidth=2;ctx.setLineDash([10,8]);
-        ctx.strokeRect(-maxW/2-34,-totalH/2-28,maxW+68,totalH+56);ctx.setLineDash([]);
+      const lines=t.text.split(/\n/).slice(0,6),lineH=t.size*t.lineHeight,widths=lines.map(line=>textWidthSpaced(line,t.spacing||0)),maxW=Math.max(...widths,40),totalH=Math.max(lineH, lineH*lines.length);
+      let boxLeft=t.align==="center"?-maxW/2:(t.align==="right"?-maxW:0),boxTop=-totalH/2;
+      if(t.mode==="vertical"){boxLeft=-t.size*.65;boxTop=-Math.max(...lines.map(x=>x.length))*lineH/2;}
+      if(t.mode==="arc"){boxLeft=-maxW*.65;boxTop=-t.size*2.2;}
+      if(t.plate){ctx.shadowColor="transparent";ctx.save();ctx.globalAlpha=t.plateOpacity??.7;ctx.fillStyle=t.plateColor||"#000000";roundedRectPath(boxLeft-24,boxTop-18,(t.mode==="vertical"?t.size*1.3:maxW)+48,((t.mode==="arc"||t.mode==="circle")?t.size*3.4:totalH)+36,18);ctx.fill();ctx.restore();if(t.shadow){ctx.shadowColor="rgba(0,0,0,.38)";ctx.shadowBlur=14;ctx.shadowOffsetY=6}}
+      if(t.mode==="vertical"){
+        const chars=t.text.replace(/\n/g,""),vh=chars.length*lineH,start=-vh/2+lineH/2;
+        chars.split("").forEach((ch,i)=>{if(t.outline){ctx.strokeStyle=t.outlineColor||"#111";ctx.lineWidth=Math.max(1,t.outlineWidth||4);ctx.strokeText(ch,0,start+i*lineH)}ctx.fillStyle=(t.highlightWord&&t.highlightWord.includes(ch))?(t.highlightColor||"#ff2776"):textFillFor(t,t.size,vh);ctx.fillText(ch,0,start+i*lineH)});
+      }else if(t.mode==="arc"||t.mode==="circle"){
+        const text=lines[0],chars=[...text],amount=t.mode==="circle"?Math.PI*1.72:(t.arcAmount??45)*Math.PI/180,range=Math.max(.08,Math.abs(amount)),radius=t.mode==="circle"?Math.max(150,t.size*2.5):Math.max(160,maxW/Math.max(.4,range)),sign=amount>=0?1:-1;
+        chars.forEach((ch,i)=>{const f=chars.length<=1?.5:i/(chars.length-1),ang=(f-.5)*range*sign;ctx.save();ctx.rotate(ang);ctx.translate(0,-radius*sign);ctx.rotate(t.mode==="circle"?Math.PI/2: -ang);if(t.outline){ctx.strokeStyle=t.outlineColor||"#111";ctx.lineWidth=Math.max(1,t.outlineWidth||4);ctx.strokeText(ch,0,0)}ctx.fillStyle=textFillFor(t,maxW,t.size*2);ctx.fillText(ch,0,0);ctx.restore()});
+      }else{
+        lines.forEach((line,i)=>{const yy=(i-(lines.length-1)/2)*lineH;if((state.mood==="cartoon"||state.mood==="pop")&&!t.outline){ctx.shadowColor="transparent";ctx.lineWidth=Math.max(3,t.size*.045);ctx.strokeStyle="rgba(0,0,0,.85)";drawSpacedText(line,0,yy,t.spacing||0,t.align,true)}drawStyledSpacedText(line,0,yy,t,t.align)});
       }
       ctx.restore();
     });
@@ -1788,6 +2005,31 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
     ctx.restore();
   }
 
+  function createDesignStamp(type){
+    const st={type,x:540,y:540,size:120,rotate:0,opacity:1,color:"#ff8fb8",visible:true,locked:false};state.designStamps.push(st);state.selectedStampIndex=state.designStamps.length-1;state.selectedLayer={type:"designStamp",index:state.selectedStampIndex};state.activeLayer="designStamp";renderDesignStampLayers();renderLayerManager();render();recordHistory("スタンプ追加")
+  }
+  function selectedDesignStamp(){return state.designStamps[state.selectedStampIndex]||null}
+  function renderDesignStampLayers(){const host=$("#designStampLayers");if(!host)return;host.innerHTML="";state.designStamps.forEach((st,i)=>{const b=document.createElement("button");b.className="layerchip"+(i===state.selectedStampIndex?" active":"");b.textContent=`${st.type.toUpperCase()} ${i+1}`;b.onclick=()=>{state.selectedStampIndex=i;state.activeLayer="designStamp";renderDesignStampLayers();syncDesignStampControls();renderLayerManager();render()};host.appendChild(b)})}
+  function syncDesignStampControls(){const st=selectedDesignStamp();if(!st)return;$("#designStampColor").value=st.color;$("#designStampSize").value=st.size;$("#designStampRotate").value=st.rotate;$("#designStampOpacity").value=Math.round(st.opacity*100)}
+  function drawDesignStampShape(st){const s=st.size||120;ctx.fillStyle=st.color||"#ff8fb8";ctx.strokeStyle="#222";ctx.lineWidth=Math.max(2,s*.035);const t=st.type;
+    if(["new","limited","handmade","original"].includes(t)){ctx.font=`800 ${Math.max(18,s*.24)}px "M PLUS Rounded 1c"`;ctx.textAlign="center";ctx.textBaseline="middle";roundedRectPath(-s*.48,-s*.22,s*.96,s*.44,s*.14);ctx.fill();ctx.fillStyle="#fff";ctx.fillText(t.toUpperCase(),0,0);return}
+    if(t==="star"){ctx.beginPath();for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,r=i%2===0?s*.45:s*.20,x=Math.cos(a)*r,y=Math.sin(a)*r;i?ctx.lineTo(x,y):ctx.moveTo(x,y)}ctx.closePath();ctx.fill();return}
+    if(t==="sparkle"){const p=[[0,-s*.48],[s*.10,-s*.10],[s*.48,0],[s*.10,s*.10],[0,s*.48],[-s*.10,s*.10],[-s*.48,0],[-s*.10,-s*.10]];ctx.beginPath();p.forEach(([x,y],i)=>i?ctx.lineTo(x,y):ctx.moveTo(x,y));ctx.closePath();ctx.fill();return}
+    if(t==="heart"){ctx.beginPath();ctx.moveTo(0,s*.34);ctx.bezierCurveTo(s*.48,0,s*.42,-s*.45,s*.08,-s*.28);ctx.bezierCurveTo(0,-s*.48,-s*.42,-s*.45,-s*.48,0);ctx.bezierCurveTo(-s*.48,s*.25,-s*.22,s*.39,0,s*.34);ctx.fill();return}
+    if(t==="flower"){for(let i=0;i<6;i++){const a=i*Math.PI/3;ctx.beginPath();ctx.ellipse(Math.cos(a)*s*.16,Math.sin(a)*s*.16,s*.16,s*.10,a,0,Math.PI*2);ctx.fill()}ctx.beginPath();ctx.arc(0,0,s*.10,0,Math.PI*2);ctx.fillStyle="#fff4a8";ctx.fill();return}
+    if(t==="ribbon"){roundedRectPath(-s*.38,-s*.16,s*.76,s*.32,s*.08);ctx.fill();ctx.beginPath();ctx.moveTo(-s*.38,s*.12);ctx.lineTo(-s*.20,s*.35);ctx.lineTo(-s*.05,s*.15);ctx.fill();ctx.beginPath();ctx.moveTo(s*.38,s*.12);ctx.lineTo(s*.20,s*.35);ctx.lineTo(s*.05,s*.15);ctx.fill();return}
+    if(t==="arrow"){ctx.beginPath();ctx.moveTo(-s*.45,-s*.08);ctx.lineTo(s*.08,-s*.08);ctx.lineTo(s*.08,-s*.24);ctx.lineTo(s*.45,0);ctx.lineTo(s*.08,s*.24);ctx.lineTo(s*.08,s*.08);ctx.lineTo(-s*.45,s*.08);ctx.closePath();ctx.fill();return}
+    if(t==="tag"){roundedRectPath(-s*.42,-s*.25,s*.84,s*.50,s*.08);ctx.fill();ctx.beginPath();ctx.arc(-s*.28,0,s*.045,0,Math.PI*2);ctx.fillStyle="#fff";ctx.fill();return}
+    if(t==="thread"){ctx.strokeStyle=st.color;ctx.lineWidth=Math.max(4,s*.06);ctx.beginPath();ctx.moveTo(-s*.45,-s*.15);ctx.bezierCurveTo(-s*.15,-s*.4,s*.10,s*.38,s*.45,s*.10);ctx.stroke();return}
+    if(t==="button"){ctx.beginPath();ctx.arc(0,0,s*.34,0,Math.PI*2);ctx.fill();ctx.fillStyle="#fff";[[ -1,-1],[1,-1],[-1,1],[1,1]].forEach(([x,y])=>{ctx.beginPath();ctx.arc(x*s*.08,y*s*.08,s*.035,0,Math.PI*2);ctx.fill()});return}
+    if(t==="hanger"){ctx.strokeStyle=st.color;ctx.lineWidth=Math.max(4,s*.05);ctx.beginPath();ctx.moveTo(-s*.38,s*.20);ctx.lineTo(0,-s*.05);ctx.lineTo(s*.38,s*.20);ctx.stroke();ctx.beginPath();ctx.arc(0,-s*.18,s*.12,Math.PI*.15,Math.PI*1.4);ctx.stroke();return}
+    if(t==="pin"){ctx.beginPath();ctx.arc(0,-s*.12,s*.22,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.moveTo(-s*.10,s*.05);ctx.lineTo(0,s*.42);ctx.lineTo(s*.10,s*.05);ctx.closePath();ctx.fill();return}
+    if(t==="bubble"){roundedRectPath(-s*.42,-s*.25,s*.84,s*.48,s*.16);ctx.fill();ctx.beginPath();ctx.moveTo(-s*.05,s*.20);ctx.lineTo(s*.08,s*.38);ctx.lineTo(s*.10,s*.18);ctx.fill();return}
+  }
+  function drawDesignStamps(){state.designStamps.forEach((st,i)=>{if(st.visible===false)return;ctx.save();ctx.translate(st.x,st.y);ctx.rotate((st.rotate||0)*Math.PI/180);ctx.globalAlpha=st.opacity??1;drawDesignStampShape(st);if(state.activeLayer==="designStamp"&&i===state.selectedStampIndex){ctx.globalAlpha=1;ctx.strokeStyle="#54e5ff";ctx.lineWidth=2;ctx.setLineDash([8,6]);ctx.strokeRect(-st.size*.55,-st.size*.55,st.size*1.1,st.size*1.1);ctx.setLineDash([])}ctx.restore()})}
+
+  function drawProductCard(){const pc=state.productCard;if(!pc||!pc.visible)return;const w=390,h=190,pad=28;let x=pc.position==="bl"?50:1080-w-50,y=1080-h-55;ctx.save();let bg="#fffdf8",fg="#4a3640",border="#d7c9bd";if(pc.style==="metal"){const g=ctx.createLinearGradient(x,y,x+w,y+h);g.addColorStop(0,"#fafafa");g.addColorStop(.5,"#bfc4ca");g.addColorStop(1,"#ffffff");bg=g;fg="#20242a";border="#8d939a"}if(pc.style==="pink"){bg="#ffdbe8";fg="#70334f";border="#ff9fbe"}if(pc.style==="minimal"){bg="rgba(255,255,255,.92)";fg="#222";border="rgba(0,0,0,.12)"}ctx.fillStyle=bg;ctx.strokeStyle=border;ctx.lineWidth=2;roundedRectPath(x,y,w,h,20);ctx.fill();ctx.stroke();ctx.fillStyle=fg;ctx.textAlign="left";ctx.textBaseline="top";ctx.font='800 28px "M PLUS Rounded 1c"';ctx.fillText(pc.name||"ITEM NAME",x+pad,y+24);ctx.font='700 18px "Montserrat"';ctx.fillText(pc.price||"PRICE",x+pad,y+70);ctx.font='600 14px "Montserrat"';ctx.fillText(`COLOR  ${pc.color||"-"}`,x+pad,y+108);ctx.fillText(`SIZE  ${pc.size||"-"}`,x+pad,y+135);ctx.fillStyle="#ff6f9f";roundedRectPath(x+w-112,y+20,88,32,16);ctx.fill();ctx.fillStyle="#fff";ctx.textAlign="center";ctx.textBaseline="middle";ctx.font='800 12px "Montserrat"';ctx.fillText(pc.status||"NEW",x+w-68,y+36);ctx.restore()}
+
   function drawGuides(){
     ctx.save();ctx.strokeStyle="rgba(84,229,255,.58)";ctx.lineWidth=1.5;ctx.setLineDash([10,10]);
     ctx.strokeRect(70,70,940,940);
@@ -1813,7 +2055,7 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
   function render(forExport=false,originalOnly=false){
     ctx.clearRect(0,0,1080,1080);
     if(originalOnly){drawOriginalOnly();return}
-    drawBackground();drawPhoto();drawDecorations();drawTexts();drawLogo();drawFrame();
+    drawBackground();drawPhoto();drawDecorations();drawDesignStamps();drawProductCard();drawTexts();drawLogo();drawFrame();
     if(!forExport && state.showGuides)drawGuides();
   }
 
@@ -1825,16 +2067,37 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
     const l=resolvedLayout();
     const t={
       text,font:state.mood==="fashion"?"Playfair Display":"Montserrat",size:64,spacing:2,color:defaultTextColor(),
-      x:l==="left"?875:l==="right"?205:540,y:l==="left"||l==="right"?510:860,rotate:0,weight:700,shadow:true,plate:false
+      x:l==="left"?875:l==="right"?205:540,y:l==="left"||l==="right"?510:860,rotate:0,weight:700,shadow:true,plate:false,
+      align:(l==="left"||l==="right")?"left":"center",mode:"normal",lineHeight:1.18,outline:false,outlineColor:"#111111",outlineWidth:4,gradient:false,grad1:"#ffffff",grad2:"#ff2776",highlightWord:"",highlightColor:"#ff2776",arcAmount:45,plateColor:"#ffffff",plateOpacity:.7,visible:true,locked:false
     };
-    state.texts.push(t);state.selectedText=state.texts.length-1;state.activeLayer="text";updateTextControls();renderTextLayers();render();return t;
+    state.texts.push(t);state.selectedText=state.texts.length-1;state.selectedLayer={type:"text",index:state.selectedText};state.activeLayer="text";updateTextControls();renderTextLayers();renderLayerManager();render();return t;
   }
 
   function updateTextControls(){
     const t=state.texts[state.selectedText];if(!t)return;
+    if(!t.align) t.align="center";
     $("#textInput").value=t.text;$("#fontSelect").value=t.font;$("#fontSize").value=t.size;$("#letterSpacing").value=t.spacing;$("#textColor").value=t.color;
     $("#textRotate").value=t.rotate;$("#shadowBtn").classList.toggle("on",t.shadow);$("#shadowBtn").textContent=t.shadow?"影 ON":"影 OFF";
-    $("#plateBtn").classList.toggle("on",t.plate);syncOutputs();
+    $("#plateBtn").classList.toggle("on",t.plate);
+    $("#alignLeftBtn").classList.toggle("on",t.align==="left");
+    $("#alignCenterBtn").classList.toggle("on",t.align==="center");
+    $("#alignRightBtn").classList.toggle("on",t.align==="right");
+    t.mode=t.mode||"normal"; t.lineHeight=t.lineHeight||1.18; t.weight=t.weight||700;
+    $$(".textModeBtn").forEach(b=>b.classList.toggle("on",b.dataset.textMode===t.mode));
+    $("#lineHeight").value=Math.round(t.lineHeight*100); $("#lineHeightOut").value=Math.round(t.lineHeight*100)+"%";
+    $("#fontWeightSelect").value=String(t.weight||700); $("#highlightWord").value=t.highlightWord||""; $("#highlightColor").value=t.highlightColor||"#ff2776";
+    $("#outlineTextBtn").classList.toggle("on",!!t.outline); $("#outlineTextBtn").textContent=t.outline?"縁 ON":"縁 OFF"; $("#outlineTextColor").value=t.outlineColor||"#111111"; $("#outlineTextWidth").value=t.outlineWidth||4;
+    $("#gradientTextBtn").classList.toggle("on",!!t.gradient); $("#gradientTextBtn").textContent=t.gradient?"グラデ ON":"グラデ OFF"; $("#gradientText1").value=t.grad1||"#ffffff"; $("#gradientText2").value=t.grad2||"#ff2776";
+    $("#arcAmount").value=t.arcAmount??45; $("#arcAmountOut").value=(t.arcAmount??45)+"°";$("#plateColor").value=t.plateColor||"#ffffff";$("#plateOpacity").value=Math.round((t.plateOpacity??.7)*100);
+    syncOutputs();
+  }
+
+  function formatDateText(kind="dot"){
+    const d=new Date(),y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,"0"),day=String(d.getDate()).padStart(2,"0"),months=["JANUARY","FEBRUARY","MARCH","APRIL","MAY","JUNE","JULY","AUGUST","SEPTEMBER","OCTOBER","NOVEMBER","DECEMBER"];
+    if(kind==="slash")return `${y}/${m}/${day}`;if(kind==="editorial")return `${months[d.getMonth()].slice(0,3)} ${day} ${y}`;if(kind==="jp")return `${y}年${Number(m)}月${Number(day)}日`;if(kind==="short")return `${m}.${day}`;if(kind==="month")return `${months[d.getMonth()]} ${day}`;return `${y}.${m}.${day}`
+  }
+  function addDateText(kind="dot"){
+    const t=createText(formatDateText(kind));t.isDate=true;t.dateKind=kind;t.font=kind==="jp"?"Noto Serif JP":kind==="editorial"||kind==="month"?"Bebas Neue":"Montserrat";t.size=kind==="short"?48:36;t.spacing=kind==="editorial"||kind==="month"?4:2;t.shadow=false;t.outline=true;t.outlineWidth=2;t.outlineColor="#ffffff";t.color="#5d3347";t.x=900;t.y=965;t.align="right";updateTextControls();renderTextLayers();renderLayerManager();render();recordHistory("日付追加");return t
   }
 
   function renderTextLayers(){
@@ -2158,7 +2421,7 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
       state.frameWidth=18;
       state.frameOpacity=.96;
       state.fx.grain=false; state.fx.vignette=false; state.fx.glow=false; state.fx.grid=false; state.fx.dots=false; state.fx.edgeBars=false;
-      t.font="Playfair Display"; t.size=64; t.spacing=2;
+      t.font="Playfair Display"; t.size=64; t.spacing=2; t.align="left";
       t.color=state.analysis.brightness>165 ? "#111111" : "#ffffff";
     }else if(mode==="bold"){
       applyMood(state.photoAspect<.84 ? "pop" : "cosmo");
@@ -2166,7 +2429,7 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
       state.frameWidth=24;
       state.frameOpacity=1;
       state.fx.vignette=true; state.fx.glow=true; state.fx.grain=false; state.fx.grid=false; state.fx.dots=(state.frame==="pop"); state.fx.edgeBars=false;
-      t.font=state.frame==="pop" ? "Bungee" : "Orbitron"; t.size=54; t.spacing=2;
+      t.font=state.frame==="pop" ? "Bungee" : "Orbitron"; t.size=54; t.spacing=2; t.align="center";
       t.color="#ffffff";
     }else{
       applyMood("fashion");
@@ -2174,7 +2437,7 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
       state.frameWidth=20;
       state.frameOpacity=.98;
       state.fx.grain=true; state.fx.vignette=true; state.fx.glow=false; state.fx.grid=false; state.fx.dots=false; state.fx.edgeBars=false;
-      t.font="Playfair Display"; t.size=66; t.spacing=3;
+      t.font="Playfair Display"; t.size=66; t.spacing=3; t.align="left";
       t.color="#ffffff";
     }
 
@@ -2218,8 +2481,41 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
     })
   }
 
+  function renderLayerManager(){
+    const host=$("#layerManager");if(!host)return;host.innerHTML="";const items=[];
+    (state.photos||[]).forEach((p,i)=>{if(p)items.push({type:"photo",index:i,label:`PHOTO ${i+1}`,hidden:state.photoEdits?.[i]?.hidden,locked:state.photoEdits?.[i]?.locked})});
+    (state.designStamps||[]).forEach((x,i)=>items.push({type:"designStamp",index:i,label:`STAMP ${x.type.toUpperCase()}`,hidden:x.visible===false,locked:x.locked}));
+    (state.texts||[]).forEach((x,i)=>items.push({type:"text",index:i,label:`TEXT ${i+1}: ${(x.text||"").slice(0,16)}`,hidden:x.visible===false,locked:x.locked}));
+    (state.logos||[]).forEach((x,i)=>items.push({type:"logo",index:i,label:`${x.source==="icon"?"ICON":"LOGO"} ${i+1}`,hidden:x.visible===false,locked:x.locked}));
+    if(state.productCard?.visible)items.push({type:"product",index:0,label:"PRODUCT CARD",hidden:false,locked:state.productCard.locked});
+    items.forEach(it=>{const b=document.createElement("button");b.className="layer-item"+(state.selectedLayer?.type===it.type&&state.selectedLayer?.index===it.index?" active":"");b.innerHTML=`<span>${it.label}</span><span class="layer-meta">${it.hidden?"非表示":"表示"}${it.locked?" / LOCK":""}</span>`;b.onclick=()=>{state.selectedLayer={type:it.type,index:it.index};selectLayerTarget(it);renderLayerManager()};host.appendChild(b)});
+  }
+  function selectLayerTarget(it){if(it.type==="photo"){state.selectedPhotoIndex=it.index;refreshPrimaryPhoto();state.activeLayer="photo";syncSlotEditControls()}if(it.type==="text"){state.selectedText=it.index;state.activeLayer="text";updateTextControls();renderTextLayers()}if(it.type==="logo"){state.selectedLogoIndex=it.index;state.logo=state.logos[it.index];state.activeLayer="logo";syncLogoControls();renderLogoLayers()}if(it.type==="designStamp"){state.selectedStampIndex=it.index;state.activeLayer="designStamp";syncDesignStampControls();renderDesignStampLayers()}if(it.type==="product"){state.activeLayer="product"}render()}
+  function layerArrayFor(type){return type==="text"?state.texts:type==="logo"?state.logos:type==="designStamp"?state.designStamps:null}
+  function layerMove(dir){const sl=state.selectedLayer||{};if(sl.type==="photo"){const ni=sl.index+dir;if(ni<0||ni>=state.photos.length)return;[state.photos[sl.index],state.photos[ni]]=[state.photos[ni],state.photos[sl.index]];[state.photoDataURLs[sl.index],state.photoDataURLs[ni]]=[state.photoDataURLs[ni],state.photoDataURLs[sl.index]];ensurePhotoEdits();[state.photoEdits[sl.index],state.photoEdits[ni]]=[state.photoEdits[ni],state.photoEdits[sl.index]];state.selectedPhotoIndex=ni;state.selectedLayer.index=ni;refreshPrimaryPhoto();renderPhotoSlots();renderLayerManager();render();recordHistory("写真順序変更");return}const arr=layerArrayFor(sl.type);if(!arr)return;const ni=sl.index+dir;if(ni<0||ni>=arr.length)return;[arr[sl.index],arr[ni]]=[arr[ni],arr[sl.index]];state.selectedLayer.index=ni;if(sl.type==="text")state.selectedText=ni;if(sl.type==="logo"){state.selectedLogoIndex=ni;state.logo=arr[ni]}if(sl.type==="designStamp")state.selectedStampIndex=ni;renderLayerManager();renderTextLayers();renderLogoLayers();renderDesignStampLayers();render();recordHistory("レイヤー移動")}
+  function layerDuplicate(){const sl=state.selectedLayer||{},arr=layerArrayFor(sl.type);if(arr){const copy=JSON.parse(JSON.stringify(arr[sl.index]));copy.x=(copy.x||0)+24;copy.y=(copy.y||0)+24;arr.splice(sl.index+1,0,copy);state.selectedLayer.index++;renderLayerManager();renderTextLayers();renderLogoLayers();renderDesignStampLayers();render();recordHistory("レイヤー複製");return}if(sl.type==="photo"&&state.photos[sl.index]){if(state.photos.length>=6)return toast("写真は最大6枚です");state.photos.splice(sl.index+1,0,state.photos[sl.index]);state.photoDataURLs.splice(sl.index+1,0,state.photoDataURLs[sl.index]);state.photoEdits.splice(sl.index+1,0,JSON.parse(JSON.stringify(state.photoEdits[sl.index])));renderPhotoSlots();renderLayerManager();render();recordHistory("写真複製")}}
+  function layerToggleHide(){const sl=state.selectedLayer||{};if(sl.type==="photo"){ensurePhotoEdits();state.photoEdits[sl.index].hidden=!state.photoEdits[sl.index].hidden}else if(sl.type==="product"){state.productCard.visible=!state.productCard.visible}else{const arr=layerArrayFor(sl.type),o=arr?.[sl.index];if(o)o.visible=o.visible===false?true:false}renderLayerManager();render();recordHistory("表示切替")}
+  function layerToggleLock(){const sl=state.selectedLayer||{};if(sl.type==="photo"){ensurePhotoEdits();state.photoEdits[sl.index].locked=!state.photoEdits[sl.index].locked}else if(sl.type==="product"){state.productCard.locked=!state.productCard.locked}else{const arr=layerArrayFor(sl.type),o=arr?.[sl.index];if(o)o.locked=!o.locked}renderLayerManager();recordHistory("ロック切替")}
+  function layerDelete(){const sl=state.selectedLayer||{};if(sl.type==="photo")clearPhotoSlot(sl.index);if(sl.type==="text"&&state.texts[sl.index]){state.texts.splice(sl.index,1);state.selectedText=Math.min(state.selectedText,state.texts.length-1)}if(sl.type==="logo"&&state.logos[sl.index]){state.logos.splice(sl.index,1);state.selectedLogoIndex=Math.max(0,Math.min(state.selectedLogoIndex,state.logos.length-1));state.logo=state.logos[state.selectedLogoIndex]||{source:"classic",visible:false,x:540,y:540,size:.22,opacity:1,locked:false}}if(sl.type==="designStamp"&&state.designStamps[sl.index]){state.designStamps.splice(sl.index,1);state.selectedStampIndex=Math.min(state.selectedStampIndex,state.designStamps.length-1)}if(sl.type==="product")state.productCard.visible=false;state.selectedLayer={type:"photo",index:0};refreshPrimaryPhoto();renderTextLayers();renderLogoLayers();renderDesignStampLayers();renderLayerManager();syncLogoControls();syncDesignStampControls();render();recordHistory("レイヤー削除")}
+
+  function syncSlotEditControls(){ensurePhotoEdits();const e=selectedPhotoEdit();$("#slotTitleIndividual").value=e.title||"";$("#slotTitleVisibleBtn").classList.toggle("on",e.titleVisible!==false);$("#slotTitleVisibleBtn").textContent=e.titleVisible===false?"タイトル OFF":"タイトル ON";$("#slotZoom").value=Math.round(e.zoom*100);$("#slotZoomOut").value=Math.round(e.zoom*100)+"%";$("#slotX").value=e.x;$("#slotXOut").value=e.x;$("#slotY").value=e.y;$("#slotYOut").value=e.y;$("#slotBrightness").value=e.b;$("#slotSaturation").value=e.s;$("#slotContrast").value=e.c;$("#slotRound").value=e.round;$("#slotRoundOut").value=e.round;$("#slotMonoBtn").classList.toggle("on",!!e.g);$("#slotMonoBtn").textContent=e.g?"モノクロ ON":"モノクロ OFF";$("#slotShadowBtn").classList.toggle("on",!!e.shadow);$("#slotShadowBtn").textContent=e.shadow?"写真影 ON":"写真影 OFF";$("#slotBorderBtn").classList.toggle("on",!!e.border);$("#slotBorderBtn").textContent=e.border?"写真枠 ON":"写真枠 OFF";$("#slotBorderColor").value=e.borderColor||"#ffffff";$("#slotBorderWidth").value=e.borderWidth||4}
+  function resetSelectedPhotoEdit(){ensurePhotoEdits();state.photoEdits[state.selectedPhotoIndex]={zoom:1,x:0,y:0,b:100,c:100,s:100,g:0,round:18,shadow:false,hidden:false,locked:false,title:"",titleVisible:true,border:false,borderColor:"#ffffff",borderWidth:4};syncSlotEditControls();render();recordHistory("写真個別リセット")}
+
+  function applyTextPositionSuggestion(n){if(state.selectedText<0){if(!state.texts.length)createText("NEW COLLECTION");state.selectedText=0}const t=state.texts[state.selectedText],r=photoRect(),L={p:[r.x+72,r.y+125,"left"],q:[r.x+72,r.y+r.h-125,"left"],r:[r.x+r.w-72,r.y+125,"right"],s:[r.x+r.w-72,r.y+r.h-125,"right"],b:[r.x+r.w/2,r.y+r.h-110,"center"],t:[r.x+r.w/2,r.y+105,"center"]};let order=[L.p,L.r,L.b];const z=state.analysis?.zoneKey||"";if(z.includes("r"))order=[L.p,L.q,L.b];else if(z.includes("l"))order=[L.r,L.s,L.b];else if(z.includes("b"))order=[L.p,L.r,L.t];else if((state.analysis?.faces||0)>0)order=[L.p,L.r,L.b];const p=order[n]||order[0];t.x=p[0];t.y=p[1];t.align=p[2];updateTextControls();render();recordHistory("AI文字位置候補")}
+
+  function fillBrandFontOptions(){const sel=$("#brandFont");if(!sel||sel.options.length)return;fonts.forEach(([label,val])=>{const o=document.createElement("option");o.value=val;o.textContent=label;sel.appendChild(o)})}
+  function loadBrandKit(){try{const k=JSON.parse(localStorage.getItem("kokoroBrandKit")||"null");if(k){$("#brandPrimary").value=k.primary||"#ff8fb8";$("#brandSecondary").value=k.secondary||"#ffe38c";$("#brandText").value=k.text||"#5d3347";$("#brandFont").value=k.font||"M PLUS Rounded 1c"}}catch(e){}}
+  function saveBrandKit(){const k={primary:$("#brandPrimary").value,secondary:$("#brandSecondary").value,text:$("#brandText").value,font:$("#brandFont").value,frame:state.frame,bgMode:state.bgMode,bgPatternPreset:state.bgPatternPreset,logos:JSON.parse(JSON.stringify(state.logos||[]))};localStorage.setItem("kokoroBrandKit",JSON.stringify(k));toast("カラー・フォント・背景・枠・ロゴセットを保存しました")}
+  function applyBrandKit(){let k=null;try{k=JSON.parse(localStorage.getItem("kokoroBrandKit")||"null")}catch(e){};const primary=$("#brandPrimary").value,secondary=$("#brandSecondary").value,text=$("#brandText").value,font=$("#brandFont").value;state.customGradient=[primary,secondary];state.patternColor1=primary;state.patternColor2=secondary;state.patternCustomColors=true;state.texts.forEach(t=>{t.font=font;t.color=text});if(k){state.frame=k.frame||state.frame;state.bgMode=k.bgMode||"paletteGradient";state.bgPatternPreset=k.bgPatternPreset||state.bgPatternPreset;if(Array.isArray(k.logos)&&k.logos.length){state.logos=JSON.parse(JSON.stringify(k.logos));state.selectedLogoIndex=0;state.logo=state.logos[0]}}else state.bgMode="paletteGradient";syncFrameUI();syncBgUI();ensureLogos();renderLogoLayers();syncLogoControls();renderTextLayers();render();recordHistory("KoKoRo STYLE")}
+
+  function getPresets(){try{return JSON.parse(localStorage.getItem("kokoroPresets")||"{}")||{}}catch(e){return{}}}
+  function refreshPresetSelect(){const sel=$("#presetSelect"),ps=getPresets();if(!sel)return;sel.innerHTML='<option value="">保存済みなし</option>'+Object.keys(ps).map(k=>`<option value="${k}">${k}</option>`).join("")}
+  function saveMyPreset(){const name=$("#presetName").value.trim();if(!name)return toast("プリセット名を入力してください");const ps=getPresets();ps[name]=snapshot();localStorage.setItem("kokoroPresets",JSON.stringify(ps));refreshPresetSelect();$("#presetSelect").value=name;toast("プリセットを保存しました")}
+  function applyMyPreset(){const n=$("#presetSelect").value,ps=getPresets();if(!n||!ps[n])return;applySnapshot(ps[n]);recordHistory(`プリセット ${n}`);toast("プリセットを適用しました")}
+  function deleteMyPreset(){const n=$("#presetSelect").value,ps=getPresets();if(!n)return;delete ps[n];localStorage.setItem("kokoroPresets",JSON.stringify(ps));refreshPresetSelect();toast("プリセットを削除しました")}
+
   // ---------- Undo / Redo ----------
-  let history=[],historyIndex=-1,historyBusy=false;
+  let history=[],historyLabels=[],historyIndex=-1,historyBusy=false,autosaveTimer=null;
   function snapshot(){
     return JSON.parse(JSON.stringify({
       layout:state.layout,mood:state.mood,frame:state.frame,frameWidth:state.frameWidth,framePadding:state.framePadding,frameOpacity:state.frameOpacity,filter:state.filter,f:state.f,
@@ -2227,15 +2523,20 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
       activeLayer:state.activeLayer,logo:state.logo,logos:state.logos,selectedLogoIndex:state.selectedLogoIndex,bgMode:state.bgMode,bgStrength:state.bgStrength,customBg:state.customBg,
       palette:state.palette,customGradient:state.customGradient,fx:state.fx,analysis:state.analysis,
       selectedPhotoIndex:state.selectedPhotoIndex,currentTemplate:state.currentTemplate,
+      photoEdits:state.photoEdits,collageGap:state.collageGap,collageRound:state.collageRound,selectedLayer:state.selectedLayer,
+      designStamps:state.designStamps,selectedStampIndex:state.selectedStampIndex,
+      patternScale:state.patternScale,patternRotate:state.patternRotate,patternOpacity:state.patternOpacity,patternColor1:state.patternColor1,patternColor2:state.patternColor2,patternCustomColors:state.patternCustomColors,
+      productCard:state.productCard,exportFormat:state.exportFormat,autosave:state.autosave,
       multiMode:state.multiMode,photoTitle:state.photoTitle,photoTitleVisible:state.photoTitleVisible,photoTitleStyle:state.photoTitleStyle,bgPatternPreset:state.bgPatternPreset
     }))
   }
-  function recordHistory(){
+  function recordHistory(label="編集"){
     if(historyBusy)return;
     const snap=snapshot(),str=JSON.stringify(snap);
     if(historyIndex>=0 && JSON.stringify(history[historyIndex])===str)return;
-    history=history.slice(0,historyIndex+1);history.push(snap);
-    if(history.length>40)history.shift();historyIndex=history.length-1;updateHistoryButtons()
+    history=history.slice(0,historyIndex+1);historyLabels=historyLabels.slice(0,historyIndex+1);history.push(snap);historyLabels.push(label);
+    if(history.length>40){history.shift();historyLabels.shift()}historyIndex=history.length-1;updateHistoryButtons();renderHistoryList();
+    if(state.autosave){clearTimeout(autosaveTimer);autosaveTimer=setTimeout(()=>saveProject(true),900)}
   }
   function applySnapshot(x){
     historyBusy=true;
@@ -2250,15 +2551,24 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
     $$("#patternGrid .bg-pattern-card").forEach(b=>b.classList.toggle("active",b.dataset.pattern===state.bgPatternPreset));
     $$("#templateGrid .template-card").forEach(b=>b.classList.toggle("active",b.dataset.template===state.currentTemplate));
     refreshPrimaryPhoto();
-    ensureLogos();renderLogoLayers();syncLogoControls();
-    syncFrameUI();syncBgUI();syncFxUI();renderTextLayers();updateTextControls();syncOutputs();render();
+    ensurePhotoEdits();
+    state.texts=(state.texts||[]).map(t=>({align:"center",mode:"normal",lineHeight:1.18,outline:false,outlineColor:"#111111",outlineWidth:4,gradient:false,grad1:"#ffffff",grad2:"#ff2776",highlightWord:"",highlightColor:"#ff2776",arcAmount:45,plateColor:"#ffffff",plateOpacity:.7,visible:true,locked:false,...t}));
+    state.designStamps=state.designStamps||[]; state.productCard={visible:false,name:"",price:"",color:"",size:"",status:"NEW",style:"paper",position:"br",locked:false,...(state.productCard||{})};
+    state.patternScale=state.patternScale||100;state.patternRotate=state.patternRotate||0;state.patternOpacity=state.patternOpacity??1;state.exportFormat=state.exportFormat||"square";state.autosave=state.autosave!==false;
+    ensureLogos();renderLogoLayers();syncLogoControls();renderDesignStampLayers();syncDesignStampControls();
+    $("#collageGap").value=state.collageGap||18;$("#collageGapOut").value=state.collageGap||18;$("#collageRound").value=state.collageRound||18;$("#collageRoundOut").value=state.collageRound||18;$("#exportFormat").value=state.exportFormat;
+    $("#patternScale").value=state.patternScale;$("#patternScaleOut").value=state.patternScale+"%";$("#patternRotate").value=state.patternRotate;$("#patternRotateOut").value=state.patternRotate+"°";$("#patternOpacity").value=Math.round(state.patternOpacity*100);$("#patternOpacityOut").value=Math.round(state.patternOpacity*100)+"%";$("#patternColor1").value=state.patternColor1||"#ffe4ef";$("#patternColor2").value=state.patternColor2||"#ffc7db";
+    $("#productName").value=state.productCard.name||"";$("#productPrice").value=state.productCard.price||"";$("#productColor").value=state.productCard.color||"";$("#productSize").value=state.productCard.size||"";$("#productStatus").value=state.productCard.status||"NEW";$("#productCardStyle").value=state.productCard.style||"paper";$("#productToggleBtn").classList.toggle("on",!!state.productCard.visible);$("#productToggleBtn").textContent=state.productCard.visible?"カード表示 ON":"カード表示 OFF";
+    $("#autosaveBtn").classList.toggle("on",state.autosave);$("#autosaveBtn").textContent=state.autosave?"自動保存 ON":"自動保存 OFF";
+    syncSlotEditControls();renderLayerManager();syncFrameUI();syncBgUI();syncFxUI();renderTextLayers();updateTextControls();syncOutputs();render();
     historyBusy=false
   }
   function undo(){if(historyIndex>0){historyIndex--;applySnapshot(history[historyIndex]);updateHistoryButtons()}}
   function redo(){if(historyIndex<history.length-1){historyIndex++;applySnapshot(history[historyIndex]);updateHistoryButtons()}}
+  function renderHistoryList(){const host=$("#historyList");if(!host)return;host.innerHTML="";history.forEach((h,i)=>{const b=document.createElement("button");b.className="history-entry"+(i===historyIndex?" active":"");b.innerHTML=`<span>${i+1}. ${historyLabels[i]||"編集"}</span><span>${i===historyIndex?"現在":"移動"}</span>`;b.onclick=()=>{historyIndex=i;applySnapshot(history[i]);updateHistoryButtons();renderHistoryList()};host.appendChild(b)});host.scrollTop=host.scrollHeight}
   function updateHistoryButtons(){
     $("#undoBtn").disabled=historyIndex<=0;$("#redoBtn").disabled=historyIndex<0||historyIndex>=history.length-1;
-    $("#undoBtn").style.opacity=$("#undoBtn").disabled?.4:1;$("#redoBtn").style.opacity=$("#redoBtn").disabled?.4:1
+    $("#undoBtn").style.opacity=$("#undoBtn").disabled?.4:1;$("#redoBtn").style.opacity=$("#redoBtn").disabled?.4:1;renderHistoryList()
   }
 
   // ---------- IndexedDB project save ----------
@@ -2269,14 +2579,14 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
       req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)
     })
   }
-  async function saveProject(){
-    if(!state.photoDataURL){toast("保存する写真がありません");return}
+  async function saveProject(silent=false){
+    if(!state.photoDataURL){if(!silent)toast("保存する写真がありません");return}
     try{
       const db=await openDB(),tx=db.transaction("projects","readwrite");
       tx.objectStore("projects").put({id:"autosave",savedAt:Date.now(),photoDataURL:state.photoDataURL,photoDataURLs:state.photoDataURLs || [state.photoDataURL],state:snapshot()});
       await new Promise((res,rej)=>{tx.oncomplete=res;tx.onerror=()=>rej(tx.error)});
-      toast("この端末にプロジェクトを保存しました")
-    }catch(e){console.error(e);toast("プロジェクト保存に失敗しました")}
+      if(!silent)toast("この端末にプロジェクトを保存しました")
+    }catch(e){console.error(e);if(!silent)toast("プロジェクト保存に失敗しました")}
   }
   async function loadProject(){
     try{
@@ -2287,7 +2597,7 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
       const imgs = [];
       for(const u of urls){ imgs.push(await loadImageFromDataURL(u)); }
       state.photos = imgs; state.photo = imgs[0]; state.photoDataURLs = urls; state.photoDataURL = urls[0]; state.photoAspect = state.photo.naturalWidth/state.photo.naturalHeight;
-      $("#emptyState").classList.add("hidden");applySnapshot(p.state);history=[snapshot()];historyIndex=0;recordHistory();toast("前回のプロジェクトを復元しました")
+      $("#emptyState").classList.add("hidden");applySnapshot(p.state);history=[snapshot()];historyLabels=["復元"];historyIndex=0;renderHistoryList();toast("前回のプロジェクトを復元しました")
     }catch(e){console.error(e);toast("プロジェクト復元に失敗しました")}
   }
 
@@ -2406,6 +2716,7 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
 
       state.photos = loadedImages;
       state.photoDataURLs = loadedDataURLs;
+      state.photoEdits=Array.from({length:6},()=>({zoom:1,x:0,y:0,b:100,c:100,s:100,g:0,round:18,shadow:false,hidden:false,locked:false,title:"",titleVisible:true,border:false,borderColor:"#ffffff",borderWidth:4}));
       state.selectedPhotoIndex = 0;
       state.photoName = validFiles[0].name;
       refreshPrimaryPhoto();
@@ -2485,7 +2796,7 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
   $("#photoTitleToggle").onclick=()=>{state.photoTitleVisible=!state.photoTitleVisible;syncOutputs();render()};
   $("#photoTitleStyle").onchange=e=>{state.photoTitleStyle=e.target.value;render()};
   $$("#multiPhotoChips .chip").forEach(b=>b.onclick=()=>{recordHistory();state.multiMode=b.dataset.multi;$$('#multiPhotoChips .chip').forEach(x=>x.classList.toggle('active',x===b));if(state.multiMode!=="single"&&state.layout==="auto") setLayout("framefull"); else {repositionForLayout();render();}recordHistory()});
-  $$("#patternGrid .bg-pattern-card").forEach(b=>b.addEventListener("click",()=>{recordHistory();state.currentTemplate="";state.bgMode="pattern";state.bgPatternPreset=b.dataset.pattern;syncBgUI();render();recordHistory();toast("背景パターンを適用しました")}));
+  $$("#patternGrid .bg-pattern-card").forEach(b=>b.addEventListener("click",()=>{recordHistory("背景変更");state.currentTemplate="";state.bgMode="pattern";state.bgPatternPreset=b.dataset.pattern;const ps=patternSpec(state.bgPatternPreset);state.patternColor1=ps.base;state.patternColor2=ps.alt;state.patternCustomColors=false;$("#patternColor1").value=ps.base;$("#patternColor2").value=ps.alt;syncBgUI();render();recordHistory("背景パターン");toast("背景パターンを適用しました")}));
 
   $("#templateClearBtn").onclick=()=>clearTemplate(false);
   $("#templateResetBtn").onclick=()=>clearTemplate(true);
@@ -2494,7 +2805,7 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
 
   const slotInput=$("#slotPhotoInput");
   $$("#photoSlotGrid [data-slot-open]").forEach(btn=>btn.onclick=()=>{state.slotUploadIndex=+btn.dataset.slotOpen;slotInput.click()});
-  $$("#photoSlotGrid [data-slot-select]").forEach(btn=>btn.onclick=()=>{const idx=+btn.dataset.slotSelect;if(!state.photos[idx]) return; state.selectedPhotoIndex=idx; refreshPrimaryPhoto(); syncOutputs(); render(); recordHistory(); toast(`SLOT ${idx+1} をメインにしました`)});
+  $$("#photoSlotGrid [data-slot-select]").forEach(btn=>btn.onclick=()=>{const idx=+btn.dataset.slotSelect;if(!state.photos[idx]) return; state.selectedPhotoIndex=idx;state.selectedLayer={type:"photo",index:idx}; refreshPrimaryPhoto();syncSlotEditControls();renderLayerManager(); syncOutputs(); render(); recordHistory("メイン写真変更"); toast(`SLOT ${idx+1} をメインにしました`)});
   $$("#photoSlotGrid [data-slot-clear]").forEach(btn=>btn.onclick=()=>clearPhotoSlot(+btn.dataset.slotClear));
   $("#clearAllPhotosBtn").onclick=()=>clearAllPhotos();
   slotInput.addEventListener("change", e=>{ const file=e.target.files && e.target.files[0]; if(file) loadPhotoIntoSlot(file, state.slotUploadIndex||0); });
@@ -2509,6 +2820,9 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
   $("#brandTuneBtn").onclick=async()=>{if(!state.photo)return toast("先に写真を選んでください");recordHistory();if(!state.analysis.brightness)await analyzePhoto();brandTune();recordHistory()};
   $("#instaOptimizeBtn").onclick=()=>instagramOptimize("balanced");
   $("#gridPreviewBtn").onclick=()=>{if(!state.photo)return toast("先に写真を選んでください");recordHistory();applyGridPreviewPosition();render();recordHistory();toast("グリッドで目立ちやすい上寄せ配置にしました")};
+  $("#coverModeBtn").onclick=()=>{if(!state.photo)return toast("先に写真を選んでください");recordHistory("COVER前");state.layout="full";state.multiMode="single";state.fitMode="cover";state.bgMode="pattern";state.bgPatternPreset="pinkStripe";state.frame="silver";let t=state.texts[0];if(!t)t=createText("NEW COLLECTION");t.text=t.text||"NEW COLLECTION";t.font="M PLUS Rounded 1c";t.size=92;t.weight=800;t.align="left";t.mode="normal";t.x=88;t.y=150;t.outline=true;t.outlineColor="#ffffff";t.outlineWidth=5;t.color="#5d3347";state.selectedText=0;state.activeLayer="text";updateTextControls();renderTextLayers();syncFrameUI();syncBgUI();render();recordHistory("投稿COVER");toast("投稿1枚目 COVERモードを適用しました")};
+  $("#feed45Btn").onclick=()=>{if(!state.photo)return toast("先に写真を選んでください");state.exportFormat="feed45";$("#exportFormat").value="feed45";state.layout="full";state.fitMode="contain";if(state.texts[0]){state.texts[0].x=90;state.texts[0].y=150;state.texts[0].align="left"}render();recordHistory("Feed 4:5最適化");toast("4:5フィードに設定しました")};
+  $("#story916Btn").onclick=()=>{if(!state.photo)return toast("先に写真を選んでください");state.exportFormat="story916";$("#exportFormat").value="story916";state.layout="full";state.fitMode="cover";if(!state.texts[0])createText("NEW COLLECTION");state.texts[0].x=90;state.texts[0].y=150;state.texts[0].align="left";state.logo.x=540;state.logo.y=930;render();recordHistory("Story 9:16最適化");toast("9:16ストーリー / Reelカバーに設定しました")};
   $$("#templateGrid .template-card").forEach(b=>b.onclick=()=>applyTemplate(b.dataset.template));
   $$("#bgModeChips .chip").forEach(b=>b.addEventListener("click",()=>{recordHistory();state.currentTemplate="";state.bgMode=b.dataset.bg;if(state.bgMode==="pattern" && !state.bgPatternPreset) state.bgPatternPreset="pinkStripe";syncBgUI();render();recordHistory()}));
   $("#bgStrength").oninput=e=>{state.bgStrength=+e.target.value/100;syncBgUI();render()};
@@ -2526,9 +2840,10 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
 
 
   $("#quickText").onclick=()=>{setTab("text");if(!state.texts.length)createText("NEW COLLECTION");$("#textInput").focus()};
+  $$('[data-quick-tab]').forEach(b=>b.onclick=()=>setTab(b.dataset.quickTab));
   $("#addTextBtn").onclick=()=>createText($("#textInput").value.trim()||"NEW TEXT");
   $("#deleteTextBtn").onclick=()=>{
-    if(state.selectedText<0)return;state.texts.splice(state.selectedText,1);state.selectedText=Math.min(state.selectedText,state.texts.length-1);renderTextLayers();updateTextControls();render()
+    if(state.selectedText<0)return;state.texts.splice(state.selectedText,1);state.selectedText=Math.min(state.selectedText,state.texts.length-1);renderTextLayers();updateTextControls();renderLayerManager();render();recordHistory("文字削除")
   };
   $("#textInput").oninput=e=>{
     if(state.selectedText<0){createText(e.target.value);return}
@@ -2541,6 +2856,57 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
   $("#textRotate").oninput=e=>{const t=state.texts[state.selectedText];if(t){t.rotate=+e.target.value;syncOutputs();render()}};
   $("#shadowBtn").onclick=()=>{const t=state.texts[state.selectedText];if(t){t.shadow=!t.shadow;updateTextControls();render()}};
   $("#plateBtn").onclick=()=>{const t=state.texts[state.selectedText];if(t){t.plate=!t.plate;updateTextControls();render()}};
+  $("#alignLeftBtn").onclick=()=>{const t=state.texts[state.selectedText];if(t){t.align="left";updateTextControls();render()}};
+  $("#alignCenterBtn").onclick=()=>{const t=state.texts[state.selectedText];if(t){t.align="center";updateTextControls();render()}};
+  $("#alignRightBtn").onclick=()=>{const t=state.texts[state.selectedText];if(t){t.align="right";updateTextControls();render()}};
+
+
+  // ----- v8 MAX: individual photo / collage -----
+  $("#slotTitleIndividual").oninput=e=>{const pe=selectedPhotoEdit();pe.title=e.target.value;render()};$("#slotTitleVisibleBtn").onclick=()=>{const pe=selectedPhotoEdit();pe.titleVisible=pe.titleVisible===false?true:false;syncSlotEditControls();render();recordHistory("写真タイトル")};
+    ["slotZoom","slotX","slotY","slotBrightness","slotSaturation","slotContrast","slotRound"].forEach(id=>{$("#"+id).oninput=e=>{const pe=selectedPhotoEdit(),v=+e.target.value;if(id==="slotZoom")pe.zoom=v/100;if(id==="slotX")pe.x=v;if(id==="slotY")pe.y=v;if(id==="slotBrightness")pe.b=v;if(id==="slotSaturation")pe.s=v;if(id==="slotContrast")pe.c=v;if(id==="slotRound")pe.round=v;syncSlotEditControls();render()}});
+  $("#slotMonoBtn").onclick=()=>{const e=selectedPhotoEdit();e.g=e.g?0:100;syncSlotEditControls();render();recordHistory("写真モノクロ")};
+  $("#slotShadowBtn").onclick=()=>{const e=selectedPhotoEdit();e.shadow=!e.shadow;syncSlotEditControls();render();recordHistory("写真影")};
+  $("#slotBorderBtn").onclick=()=>{const e=selectedPhotoEdit();e.border=!e.border;syncSlotEditControls();render();recordHistory("写真枠")};$("#slotBorderColor").oninput=e=>{selectedPhotoEdit().borderColor=e.target.value;render()};$("#slotBorderWidth").oninput=e=>{selectedPhotoEdit().borderWidth=+e.target.value;render()};
+  $("#slotResetBtn").onclick=()=>resetSelectedPhotoEdit();
+  $("#collageGap").oninput=e=>{state.collageGap=+e.target.value;$("#collageGapOut").value=e.target.value;render()};
+  $("#collageRound").oninput=e=>{state.collageRound=+e.target.value;$("#collageRoundOut").value=e.target.value;render()};
+  $$("#collagePresetChips .chip").forEach(b=>b.onclick=()=>{state.multiMode=b.dataset.collage;state.layout="framefull";state.fitMode="cover";$$('#collagePresetChips .chip').forEach(x=>x.classList.toggle('active',x===b));$$('#multiPhotoChips .chip').forEach(x=>x.classList.remove('active'));render();renderLayerManager();recordHistory("コラージュ変更")});
+
+  // ----- Layer manager -----
+  $("#layerUpBtn").onclick=()=>layerMove(-1);$("#layerDownBtn").onclick=()=>layerMove(1);$("#layerDuplicateBtn").onclick=()=>layerDuplicate();$("#layerHideBtn").onclick=()=>layerToggleHide();$("#layerLockBtn").onclick=()=>layerToggleLock();$("#layerDeleteBtn").onclick=()=>layerDelete();
+
+  // ----- Product card -----
+  ["productName","productPrice","productColor","productSize"].forEach(id=>{$("#"+id).oninput=e=>{const k={productName:"name",productPrice:"price",productColor:"color",productSize:"size"}[id];state.productCard[k]=e.target.value;render()}});
+  $("#productStatus").onchange=e=>{state.productCard.status=e.target.value;render()};$("#productCardStyle").onchange=e=>{state.productCard.style=e.target.value;render()};
+  $("#productToggleBtn").onclick=()=>{state.productCard.visible=!state.productCard.visible;$("#productToggleBtn").classList.toggle("on",state.productCard.visible);$("#productToggleBtn").textContent=state.productCard.visible?"カード表示 ON":"カード表示 OFF";renderLayerManager();render();recordHistory("商品カード")};
+  $("#productPositionBtn").onclick=()=>{state.productCard.position=state.productCard.position==="br"?"bl":"br";$("#productPositionBtn").textContent=state.productCard.position==="br"?"右下へ":"左下へ";render();recordHistory("商品カード位置")};
+
+  // ----- Text PRO -----
+  $$(".textModeBtn").forEach(b=>b.onclick=()=>{const t=state.texts[state.selectedText];if(!t)return;t.mode=b.dataset.textMode;updateTextControls();render();recordHistory("文字モード")});
+  $("#lineHeight").oninput=e=>{const t=state.texts[state.selectedText];if(t){t.lineHeight=+e.target.value/100;$("#lineHeightOut").value=e.target.value+"%";render()}};
+  $("#fontWeightSelect").onchange=e=>{const t=state.texts[state.selectedText];if(t){t.weight=+e.target.value;render()}};
+  $("#highlightWord").oninput=e=>{const t=state.texts[state.selectedText];if(t){t.highlightWord=e.target.value;render()}};$("#highlightColor").oninput=e=>{const t=state.texts[state.selectedText];if(t){t.highlightColor=e.target.value;render()}};
+  $("#outlineTextBtn").onclick=()=>{const t=state.texts[state.selectedText];if(t){t.outline=!t.outline;updateTextControls();render()}};$("#outlineTextColor").oninput=e=>{const t=state.texts[state.selectedText];if(t){t.outlineColor=e.target.value;render()}};$("#outlineTextWidth").oninput=e=>{const t=state.texts[state.selectedText];if(t){t.outlineWidth=+e.target.value;render()}};
+  $("#gradientTextBtn").onclick=()=>{const t=state.texts[state.selectedText];if(t){t.gradient=!t.gradient;updateTextControls();render()}};$("#gradientText1").oninput=e=>{const t=state.texts[state.selectedText];if(t){t.grad1=e.target.value;render()}};$("#gradientText2").oninput=e=>{const t=state.texts[state.selectedText];if(t){t.grad2=e.target.value;render()}};
+  $("#arcAmount").oninput=e=>{const t=state.texts[state.selectedText];if(t){t.arcAmount=+e.target.value;$("#arcAmountOut").value=e.target.value+"°";render()}};
+  $("#plateColor").oninput=e=>{const t=state.texts[state.selectedText];if(t){t.plateColor=e.target.value;render()}};$("#plateOpacity").oninput=e=>{const t=state.texts[state.selectedText];if(t){t.plateOpacity=+e.target.value/100;render()}};
+  function applyTextFxPreset(name){let t=state.texts[state.selectedText];if(!t){t=createText("NEW COLLECTION")}if(name==="metal"){t.font="Montserrat";t.weight=800;t.gradient=true;t.grad1="#ffffff";t.grad2="#7f858d";t.outline=true;t.outlineColor="#4c5158";t.outlineWidth=3;t.shadow=true}if(name==="embroidery"){t.font="M PLUS Rounded 1c";t.weight=800;t.gradient=false;t.color="#f08eaa";t.outline=true;t.outlineColor="#fff5f8";t.outlineWidth=6;t.shadow=true}if(name==="sticker"){t.font="Bungee";t.weight=700;t.gradient=true;t.grad1="#fff36f";t.grad2="#ff6aa7";t.outline=true;t.outlineColor="#ffffff";t.outlineWidth=10;t.shadow=true}if(name==="hand"){t.font="Caveat";t.weight=700;t.gradient=false;t.color="#6e4a58";t.outline=false;t.shadow=false}if(name==="puffy"){t.font="M PLUS Rounded 1c";t.weight=800;t.gradient=true;t.grad1="#ffffff";t.grad2="#ff9fc4";t.outline=true;t.outlineColor="#ff78ac";t.outlineWidth=5;t.shadow=true}if(name==="typewriter"){t.font="Courier New";t.weight=700;t.gradient=false;t.color="#333333";t.outline=false;t.shadow=false;t.spacing=2}updateTextControls();render();recordHistory(`文字FX ${name}`)}
+  $$("#textFxPresets [data-textfx]").forEach(b=>b.onclick=()=>applyTextFxPreset(b.dataset.textfx));
+  $$(".textPosSuggest").forEach(b=>b.onclick=()=>applyTextPositionSuggestion(+b.dataset.pos));
+
+  // ----- Brand templates / kit / presets -----
+  $$("#brandTemplateGrid [data-brand-copy]").forEach(b=>b.onclick=()=>{let t=state.texts[0];if(!t)t=createText(b.dataset.brandCopy);t.text=b.dataset.brandCopy;t.font="M PLUS Rounded 1c";t.size=62;t.weight=800;t.align="left";t.color=$("#brandText").value;t.x=100;t.y=170;state.selectedText=0;state.activeLayer="text";updateTextControls();renderTextLayers();renderLayerManager();render();recordHistory(`ブランド ${b.dataset.brandCopy}`)});
+  $("#saveBrandKitBtn").onclick=()=>saveBrandKit();$("#applyBrandKitBtn").onclick=()=>applyBrandKit();$("#savePresetBtn").onclick=()=>saveMyPreset();$("#applyPresetBtn").onclick=()=>applyMyPreset();$("#deletePresetBtn").onclick=()=>deleteMyPreset();
+
+  // ----- Design stamps -----
+  $$("#designStampBank [data-stamp]").forEach(b=>b.onclick=()=>createDesignStamp(b.dataset.stamp));$("#deleteStampBtn").onclick=()=>{if(state.selectedStampIndex<0)return;state.designStamps.splice(state.selectedStampIndex,1);state.selectedStampIndex=Math.min(state.selectedStampIndex,state.designStamps.length-1);renderDesignStampLayers();renderLayerManager();render();recordHistory("スタンプ削除")};
+  $("#designStampColor").oninput=e=>{const st=selectedDesignStamp();if(st){st.color=e.target.value;render()}};$("#designStampSize").oninput=e=>{const st=selectedDesignStamp();if(st){st.size=+e.target.value;render()}};$("#designStampRotate").oninput=e=>{const st=selectedDesignStamp();if(st){st.rotate=+e.target.value;render()}};$("#designStampOpacity").oninput=e=>{const st=selectedDesignStamp();if(st){st.opacity=+e.target.value/100;render()}};
+
+  // ----- Background PRO -----
+  $("#patternScale").oninput=e=>{state.patternScale=+e.target.value;$("#patternScaleOut").value=e.target.value+"%";render()};$("#patternRotate").oninput=e=>{state.patternRotate=+e.target.value;$("#patternRotateOut").value=e.target.value+"°";render()};$("#patternOpacity").oninput=e=>{state.patternOpacity=+e.target.value/100;$("#patternOpacityOut").value=e.target.value+"%";render()};
+  $("#patternColor1").oninput=e=>{state.patternColor1=e.target.value;state.patternCustomColors=true;render()};$("#patternColor2").oninput=e=>{state.patternColor2=e.target.value;state.patternCustomColors=true;render()};$("#patternColorResetBtn").onclick=()=>{const p=patternSpec(state.bgPatternPreset);state.patternColor1=p.base;state.patternColor2=p.alt;state.patternCustomColors=false;$("#patternColor1").value=p.base;$("#patternColor2").value=p.alt;render();recordHistory("背景色リセット")};
+
+  let selectedDateKind="dot";$$("#dateTemplateChips .chip").forEach(b=>b.onclick=()=>{selectedDateKind=b.dataset.date;$$("#dateTemplateChips .chip").forEach(x=>x.classList.toggle("active",x===b));});$("#addDateBtn").onclick=()=>addDateText(selectedDateKind);$("#refreshDateBtn").onclick=()=>{const t=state.texts[state.selectedText];if(!t||!t.isDate)return toast("日付テキストを選択してください");t.text=formatDateText(t.dateKind||selectedDateKind);$("#textInput").value=t.text;renderTextLayers();render();recordHistory("日付更新")};
 
   $$(".frame-card").forEach(b=>b.onclick=()=>{state.frame=b.dataset.frame;syncFrameUI();render()});
   $("#frameWidth").oninput=e=>{state.frameWidth=+e.target.value;syncOutputs();render()};
@@ -2587,22 +2953,19 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
   }
   canvas.addEventListener("pointerdown",e=>{
     canvas.setPointerCapture(e.pointerId);const p=pt(e);pointers.set(e.pointerId,p);
-    if(pointers.size===2){
-      const arr=[...pointers.values()],d=Math.hypot(arr[0].x-arr[1].x,arr[0].y-arr[1].y);
-      pinchStart={d,zoom:state.zoom};return;
-    }
+    if(pointers.size>1){return;}
     const activeLogo=selectedLogo();
-    dragStart={p,shiftX:state.shiftX,shiftY:state.shiftY,logoX:activeLogo?.x??540,logoY:activeLogo?.y??540};
+    const pe=selectedPhotoEdit(),st=selectedDesignStamp();
+    dragStart={p,shiftX:state.shiftX,shiftY:state.shiftY,logoX:activeLogo?.x??540,logoY:activeLogo?.y??540,photoX:pe?.x??0,photoY:pe?.y??0,stampX:st?.x??540,stampY:st?.y??540};
     if(state.activeLayer==="text"&&state.selectedText>=0){const t=state.texts[state.selectedText];dragStart.tx=t.x;dragStart.ty=t.y}
   });
   canvas.addEventListener("pointermove",e=>{
     if(!pointers.has(e.pointerId))return;const p=pt(e);pointers.set(e.pointerId,p);
-    if(pointers.size===2 && state.activeLayer==="photo" && pinchStart){
-      const arr=[...pointers.values()],d=Math.hypot(arr[0].x-arr[1].x,arr[0].y-arr[1].y);
-      state.zoom=Math.min(2.6,Math.max(1,pinchStart.zoom*(d/pinchStart.d)));$("#photoZoom").value=Math.round(state.zoom*100);syncOutputs();render();return;
-    }
+    if(pointers.size>1){return;}
     if(!dragStart)return;const dx=p.x-dragStart.p.x,dy=p.y-dragStart.p.y;
-    if(state.activeLayer==="photo"){state.shiftX=dragStart.shiftX+dx;state.shiftY=dragStart.shiftY+dy}
+    if(state.activeLayer==="photo"){
+      const e=selectedPhotoEdit();if(e&&!e.locked){e.x=dragStart.photoX+dx;e.y=dragStart.photoY+dy;syncSlotEditControls()}
+    }
     const snap=(v,targets)=>{for(const t of targets)if(Math.abs(v-t)<18)return t;return v};
     state.snapX=null;state.snapY=null;
     if(state.activeLayer==="logo"){
@@ -2614,9 +2977,10 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
       }
     }
     if(state.activeLayer==="text"&&state.selectedText>=0){
-      const t=state.texts[state.selectedText];let nx=Math.max(-200,Math.min(1280,dragStart.tx+dx)),ny=Math.max(-100,Math.min(1180,dragStart.ty+dy));
-      const sx=snap(nx,[70,360,540,720,1010]),sy=snap(ny,[70,360,540,720,1010]);if(sx!==nx)state.snapX=sx;if(sy!==ny)state.snapY=sy;
-      t.x=sx;t.y=sy
+      const t=state.texts[state.selectedText];if(!t.locked){let nx=Math.max(-200,Math.min(1280,dragStart.tx+dx)),ny=Math.max(-100,Math.min(1180,dragStart.ty+dy));const sx=snap(nx,[70,360,540,720,1010]),sy=snap(ny,[70,360,540,720,1010]);if(sx!==nx)state.snapX=sx;if(sy!==ny)state.snapY=sy;t.x=sx;t.y=sy}
+    }
+    if(state.activeLayer==="designStamp"){
+      const st=selectedDesignStamp();if(st&&!st.locked){st.x=Math.max(0,Math.min(1080,dragStart.stampX+dx));st.y=Math.max(0,Math.min(1080,dragStart.stampY+dy));syncDesignStampControls()}
     }
     render();
   });
@@ -2648,34 +3012,67 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
   }
   installAbsoluteInteractionLock();
 
-  async function exportBlob(size=state.exportSize||1080){
+  async function showInstagramGrid(){
+    if(!state.photo)return toast("写真を選んでください");const blob=await exportSquareBlob(1080),url=await blobDataURL(blob),host=$("#igGridPreview");host.innerHTML="";for(let i=0;i<9;i++){const d=document.createElement("div");if(i===4){d.className="center";const im=document.createElement("img");im.src=url;d.appendChild(im)}else{const ph=document.createElement("div");ph.style.cssText=`width:100%;height:100%;background:${i%2?"#f8edf2":"#fff8e7"}`;d.appendChild(ph)}host.appendChild(d)}$("#igGridModal").classList.add("show")
+  }
+  function saveCompare(which){const snap=snapshot();if(which==="A")state.compareA=snap;else state.compareB=snap;state.compareCurrent=snapshot();toast(`${which}案を保存しました`)}
+  function showCompare(which){const snap=which==="A"?state.compareA:state.compareB;if(!snap)return toast(`${which}案はまだありません`);if(!state.compareCurrent)state.compareCurrent=snapshot();applySnapshot(snap);toast(`${which}案を表示中`)}
+  function restoreCompareCurrent(){if(!state.compareCurrent)return;applySnapshot(state.compareCurrent);state.compareCurrent=null;toast("現在の編集に戻しました")}
+  function setCompleteFormat(fmt){state.exportFormat=fmt;$("#exportFormat").value=fmt;toast(fmt==="square"?"1:1に設定":fmt==="feed45"?"4:5に設定":"9:16に設定")}
+
+  function snapshotDataURL(snap){
+    const cur=snapshot(),oldBusy=historyBusy,oldLayer=state.activeLayer;
+    historyBusy=true;
+    applySnapshot(snap);
+    state.activeLayer="";
+    render(true);
+    const url=canvas.toDataURL("image/png");
+    applySnapshot(cur);
+    state.activeLayer=oldLayer;
+    historyBusy=oldBusy;
+    render();
+    return url
+  }
+  function showABCompare(){if(!state.compareA||!state.compareB)return toast("AとBを両方保存してください");$("#abCompareA").src=snapshotDataURL(state.compareA);$("#abCompareB").src=snapshotDataURL(state.compareB);$("#abCompareModal").classList.add("show")}
+
+  async function exportSquareBlob(size=state.exportSize||1080){
     size=+size||1080;
-    const oldW=canvas.width,oldH=canvas.height;
+    const oldW=canvas.width,oldH=canvas.height,oldLayer=state.activeLayer;
+    state.activeLayer="";
     if(size!==1080){
       canvas.width=size;canvas.height=size;
-      ctx.setTransform(size/1080,0,0,size/1080,0,0);
+      ctx.setTransform(size/1080,0,0,size/1080,0,0)
     }else{
-      ctx.setTransform(1,0,0,1,0,0);
+      ctx.setTransform(1,0,0,1,0,0)
     }
     render(true);
     const blob=await new Promise(resolve=>canvas.toBlob(resolve,"image/png"));
-    canvas.width=oldW;canvas.height=oldH;ctx.setTransform(1,0,0,1,0,0);render();
-    return blob;
+    canvas.width=oldW;canvas.height=oldH;
+    ctx.setTransform(1,0,0,1,0,0);
+    state.activeLayer=oldLayer;
+    render();
+    return blob
+  }
+  function blobDataURL(blob){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(blob)})}
+  async function exportBlob(size=state.exportSize||1080,format=state.exportFormat||"square"){
+    size=+size||1080;if(format==="square")return exportSquareBlob(size);const sq=await exportSquareBlob(size),img=await loadImageFromDataURL(await blobDataURL(sq));let w=size,h=format==="feed45"?Math.round(size*1.25):Math.round(size*16/9);const out=document.createElement("canvas");out.width=w;out.height=h;const ox=out.getContext("2d");
+    const sc=Math.max(w/img.width,h/img.height),dw=img.width*sc,dh=img.height*sc;ox.save();ox.filter=`blur(${Math.max(20,size*.035)}px) brightness(112%) saturate(90%)`;ox.globalAlpha=.55;ox.drawImage(img,(w-dw)/2-20,(h-dh)/2-20,dw+40,dh+40);ox.restore();ox.fillStyle="rgba(255,255,255,.28)";ox.fillRect(0,0,w,h);
+    const box=format==="feed45"?w*.94:w*.90, x=(w-box)/2, y=format==="feed45"?(h-box)/2:h*.18;ox.save();ox.shadowColor="rgba(0,0,0,.18)";ox.shadowBlur=size*.025;ox.shadowOffsetY=size*.012;ox.drawImage(img,x,y,box,box);ox.restore();return await new Promise(resolve=>out.toBlob(resolve,"image/png"))
   }
   async function downloadPNG(){
     if(!state.photo){toast("写真を選んでください");return}
-    state.exportSize=+$("#exportSize").value||1080;
-    const blob=await exportBlob(state.exportSize);const a=document.createElement("a");a.href=URL.createObjectURL(blob);
+    state.exportSize=+$("#exportSize").value||1080;state.exportFormat=$("#exportFormat").value||"square";
+    const blob=await exportBlob(state.exportSize,state.exportFormat);const a=document.createElement("a");a.href=URL.createObjectURL(blob);
     const d=new Date(),pad=n=>String(n).padStart(2,"0");
-    a.download=`KoKoRo_${state.exportSize}px_${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}_${pad(d.getHours())}${pad(d.getMinutes())}.png`;
+    a.download=`KoKoRo_${state.exportFormat}_${state.exportSize}px_${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}_${pad(d.getHours())}${pad(d.getMinutes())}.png`;
     document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000);toast("PNGを書き出しました");
   }
   $("#exportBtn").onclick=downloadPNG;$("#topExportBtn").onclick=downloadPNG;
 
   async function exportAsFile(){
-    state.exportSize=+$("#exportSize").value||1080;
-    const blob=await exportBlob(state.exportSize);
-    return new File([blob],`KoKoRo_${state.exportSize}px.png`,{type:"image/png"});
+    state.exportSize=+$("#exportSize").value||1080;state.exportFormat=$("#exportFormat").value||"square";
+    const blob=await exportBlob(state.exportSize,state.exportFormat);
+    return new File([blob],`KoKoRo_${state.exportFormat}_${state.exportSize}px.png`,{type:"image/png"});
   }
 
   $("#savePhotoBtn").onclick=async()=>{
@@ -2698,8 +3095,8 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
     else{toast("このブラウザは画像共有に未対応です");}
   };
 
-  function showActual(){
-    render();$("#actualImage").src=canvas.toDataURL("image/png");$("#actualModal").classList.add("show");
+  async function showActual(){
+    if(!state.photo)return toast("写真を選んでください");state.exportFormat=$("#exportFormat").value||state.exportFormat||"square";state.exportSize=+$("#exportSize").value||1080;const blob=await exportBlob(state.exportSize,state.exportFormat);$("#actualImage").src=await blobDataURL(blob);$("#actualModal").classList.add("show");
   }
   $("#actualBtn").onclick=showActual;$("#actualBtn2").onclick=showActual;$("#closeActual").onclick=()=>$("#actualModal").classList.remove("show");
   $("#guideBtn").onclick=()=>{
@@ -2712,8 +3109,14 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
   ["pointerdown","touchstart"].forEach(ev=>compareBtn.addEventListener(ev,showBefore,{passive:false}));
   ["pointerup","pointercancel","pointerleave","touchend"].forEach(ev=>compareBtn.addEventListener(ev,showAfter,{passive:false}));
   $("#undoBtn").onclick=undo;$("#redoBtn").onclick=redo;
-  $("#saveProjectBtn").onclick=saveProject;$("#loadProjectBtn").onclick=loadProject;
-  $("#exportSize").onchange=e=>{state.exportSize=+e.target.value};
+  $("#saveProjectBtn").onclick=()=>saveProject(false);$("#loadProjectBtn").onclick=loadProject;
+  $("#exportSize").onchange=e=>{state.exportSize=+e.target.value};$("#exportFormat").onchange=e=>{state.exportFormat=e.target.value};
+  $("#showGridPreviewBtn").onclick=()=>showInstagramGrid();$("#closeIgGrid").onclick=()=>$("#igGridModal").classList.remove("show");
+  $("#showCompleteBtn").onclick=()=>$("#completeModal").classList.add("show");$("#completeCloseBtn").onclick=()=>$("#completeModal").classList.remove("show");
+  $("#completeSaveBtn").onclick=()=>$("#savePhotoBtn").click();$("#completeShareBtn").onclick=()=>$("#shareBtn").click();$("#completeSquareBtn").onclick=()=>setCompleteFormat("square");$("#completeFeedBtn").onclick=()=>setCompleteFormat("feed45");$("#completeStoryBtn").onclick=()=>setCompleteFormat("story916");
+  $("#saveABtn").onclick=()=>saveCompare("A");$("#showABtn").onclick=()=>showCompare("A");$("#saveBBtn").onclick=()=>saveCompare("B");$("#showBBtn").onclick=()=>showCompare("B");$("#restoreCurrentBtn").onclick=()=>restoreCompareCurrent();$("#showABCompareBtn").onclick=()=>showABCompare();$("#closeABCompare").onclick=()=>$("#abCompareModal").classList.remove("show");
+  $("#autosaveBtn").onclick=()=>{state.autosave=!state.autosave;$("#autosaveBtn").classList.toggle("on",state.autosave);$("#autosaveBtn").textContent=state.autosave?"自動保存 ON":"自動保存 OFF";recordHistory("自動保存設定")};
+  $("#clearHistoryBtn").onclick=()=>{history=[snapshot()];historyLabels=["現在"];historyIndex=0;renderHistoryList();updateHistoryButtons();toast("履歴を整理しました")};
   document.addEventListener("keydown",e=>{
     if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="z"){e.preventDefault();e.shiftKey?redo():undo()}
     if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="y"){e.preventDefault();redo()}
@@ -2735,11 +3138,12 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
   $("#resetBtn").onclick=()=>{
     if(!confirm("編集内容をリセットしますか？"))return;
     state.layout="auto";state.mood="fashion";state.frame="none";state.frameWidth=24;state.framePadding=0;state.frameOpacity=1;state.f={...filterPresets.original};state.filter="original";
-    state.zoom=1;state.fitMode="contain";state.shiftX=state.shiftY=0;state.texts=[];state.selectedText=-1;state.activeLayer="photo";state.selectedLogoIndex=0;state.logos=[{source:"classic",visible:true,x:930,y:930,size:.22,opacity:1,locked:false}];state.logo=state.logos[0];
-    state.photos=state.photo?[state.photo]:[]; state.photoDataURLs=state.photoDataURL?[state.photoDataURL]:[]; state.selectedPhotoIndex=0; state.slotUploadIndex=0; state.currentTemplate=""; state.multiMode="single"; state.photoTitle=""; state.photoTitleVisible=true; state.photoTitleStyle="paper";
-    state.bgMode="backImage";state.bgPatternPreset="pinkStripe";state.bgStrength=.70;state.customBg="#ffe4ef";state.customGradient=["#ffd6e5","#fff0a8"];state.fx={grain:false,vignette:false,glow:false,grid:false,dots:false,edgeBars:false,strength:.35};state.showGuides=false;
+    state.zoom=1;state.fitMode="contain";state.shiftX=state.shiftY=0;state.texts=[];state.selectedText=-1;state.selectedLayer={type:"photo",index:0};state.activeLayer="photo";state.selectedLogoIndex=0;state.logos=[{source:"classic",visible:true,x:930,y:930,size:.22,opacity:1,locked:false}];state.logo=state.logos[0];state.designStamps=[];state.selectedStampIndex=-1;
+    state.photos=state.photo?[state.photo]:[]; state.photoDataURLs=state.photoDataURL?[state.photoDataURL]:[]; state.selectedPhotoIndex=0;state.photoEdits=Array.from({length:6},()=>({zoom:1,x:0,y:0,b:100,c:100,s:100,g:0,round:18,shadow:false,hidden:false,locked:false,title:"",titleVisible:true,border:false,borderColor:"#ffffff",borderWidth:4}));state.slotUploadIndex=0;state.currentTemplate="";state.multiMode="single";state.collageGap=18;state.collageRound=18;state.photoTitle="";state.photoTitleVisible=true;state.photoTitleStyle="paper";
+    state.bgMode="backImage";state.bgPatternPreset="pinkStripe";state.patternScale=100;state.patternRotate=0;state.patternOpacity=1;state.patternColor1="#ffe4ef";state.patternColor2="#ffc7db";state.patternCustomColors=false;state.bgStrength=.70;state.customBg="#ffe4ef";state.customGradient=["#ffd6e5","#fff0a8"];state.fx={grain:false,vignette:false,glow:false,grid:false,dots:false,edgeBars:false,strength:.35};state.productCard={visible:false,name:"",price:"",color:"",size:"",status:"NEW",style:"paper",position:"br",locked:false};state.exportFormat="square";state.showGuides=false;
     $("#textInput").value="";$("#photoZoom").value=100;$("#frameWidth").value=24;$("#framePadding").value=0;$("#frameOpacity").value=100;$("#logoSize").value=22;$("#logoOpacity").value=100; $("#photoTitleInput").value=""; $("#photoTitleStyle").value="paper";
-    $$(".mood").forEach(b=>b.classList.toggle("active",b.dataset.mood==="fashion"));$$("#multiPhotoChips .chip").forEach((b,i)=>b.classList.toggle("active",i===0));syncFrameUI();syncBgUI();syncFxUI();renderTextLayers();applyFilterPreset("original");setTab("photo");render();recordHistory();toast("編集設定をリセットしました");
+    $("#collageGap").value=18;$("#collageGapOut").value=18;$("#collageRound").value=18;$("#collageRoundOut").value=18;$("#exportFormat").value="square";$("#patternScale").value=100;$("#patternScaleOut").value="100%";$("#patternRotate").value=0;$("#patternRotateOut").value="0°";$("#patternOpacity").value=100;$("#patternOpacityOut").value="100%";$("#patternColor1").value="#ffe4ef";$("#patternColor2").value="#ffc7db";["productName","productPrice","productColor","productSize"].forEach(id=>$("#"+id).value="");$("#productStatus").value="NEW";$("#productCardStyle").value="paper";$("#productToggleBtn").classList.remove("on");$("#productToggleBtn").textContent="カード表示 OFF";
+    $$(".mood").forEach(b=>b.classList.toggle("active",b.dataset.mood==="fashion"));$$("#multiPhotoChips .chip").forEach((b,i)=>b.classList.toggle("active",i===0));$("#exportFormat").value="square";renderDesignStampLayers();renderLayerManager();syncSlotEditControls();syncFrameUI();syncBgUI();syncFxUI();renderTextLayers();applyFilterPreset("original");setTab("photo");render();recordHistory("リセット");toast("編集設定をリセットしました");
   };
 
   window.addEventListener("resize",render);
@@ -2752,8 +3156,9 @@ button,.chip,.template-card,.bg-pattern-card,.tab,.switch{
   $("#photoTitleInput").value = state.photoTitle || "";
   $("#photoTitleStyle").value = state.photoTitleStyle || "paper";
   $$("#multiPhotoChips .chip").forEach((b,i)=>b.classList.toggle("active",i===0));
-  ensureLogos();renderLogoLayers();syncLogoControls();renderPhotoSlots();
-  syncOutputs();syncBgUI();syncFxUI();renderPalette();generateCopy();updateHistoryButtons();render();
+  fillBrandFontOptions();loadBrandKit();refreshPresetSelect();ensurePhotoEdits();ensureLogos();renderLogoLayers();syncLogoControls();renderPhotoSlots();renderDesignStampLayers();syncSlotEditControls();renderLayerManager();
+  $("#exportFormat").value=state.exportFormat;syncOutputs();syncBgUI();syncFxUI();renderPalette();generateCopy();history=[snapshot()];historyLabels=["起動"];historyIndex=0;updateHistoryButtons();render();
+  setTimeout(async()=>{try{const db=await openDB(),tx=db.transaction("projects","readonly"),req=tx.objectStore("projects").get("autosave");const saved=await new Promise((res,rej)=>{req.onsuccess=()=>res(req.result);req.onerror=()=>rej(req.error)});if(saved&&saved.photoDataURL&&confirm("前回の編集を続けますか？"))await loadProject()}catch(e){}},500);
 })();
 </script>
 </body>
